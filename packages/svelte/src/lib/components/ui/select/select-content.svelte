@@ -50,7 +50,6 @@
 								class="relative"
 								use:indicator={{
 									active: "[data-highlighted]",
-									attributes: ["data-highlighted"],
 									curve: "smooth",
 									className: "glass-neutral rounded-lg",
 								}}

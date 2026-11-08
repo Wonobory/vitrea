@@ -48,7 +48,6 @@
 				use:numberSlots
 				use:indicator={{
 					active: "[data-active]",
-					attributes: ["data-active"],
 					className:
 						"!z-20 rounded-lg border border-ring ring-3 ring-ring/20 group-data-[status=verifying]/otp:invisible group-data-[status=success]/otp:invisible group-data-[status=error]/otp:invisible",
 				}}

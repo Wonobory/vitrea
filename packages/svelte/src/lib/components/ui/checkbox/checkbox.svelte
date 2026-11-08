@@ -1,10 +1,10 @@
 <script lang="ts">
+	import { checkIn } from "$lib/transitions";
 	import { Checkbox as CheckboxPrimitive } from "bits-ui";
 	import CheckIcon from "@lucide/svelte/icons/check";
 	import MinusIcon from "@lucide/svelte/icons/minus";
 	import { cn, type WithoutChildrenOrChild } from "$lib/utils.js";
 	import { scale } from "svelte/transition";
-	import { springXSmall } from "$lib/springs";
 	import { press } from "$lib/press";
 
 	let {
@@ -40,9 +40,9 @@
 				class="grid place-content-center [&>svg]:size-3.5 [&>svg]:stroke-[3]"
 			>
 				{#if checked}
-					<span in:scale={{ duration: 320, start: 0.3, easing: springXSmall }}><CheckIcon /></span>
+					<span in:scale={checkIn}><CheckIcon /></span>
 				{:else if indeterminate}
-					<span in:scale={{ duration: 320, start: 0.3, easing: springXSmall }}><MinusIcon /></span>
+					<span in:scale={checkIn}><MinusIcon /></span>
 				{/if}
 			</span>
 		</button>

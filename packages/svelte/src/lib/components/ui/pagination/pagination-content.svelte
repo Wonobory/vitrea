@@ -14,7 +14,7 @@
 <ul
 	bind:this={ref}
 	data-slot="pagination-content"
-	use:indicator={{ className: "glass-neutral rounded-md" }}
+	use:indicator
 	class={cn(["isolate gap-1 flex items-center", className])}
 	{...restProps}
 >

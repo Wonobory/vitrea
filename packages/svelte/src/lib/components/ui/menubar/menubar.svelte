@@ -16,7 +16,7 @@
 		<div
 			{...props}
 			class={cn(["glass-panel isolate flex h-10 items-center gap-1 rounded-lg p-1", className])}
-			use:indicator={{ active: '[data-state="open"]', className: "glass-neutral rounded-md" }}
+			use:indicator={{ active: '[data-state="open"]' }}
 		>
 			{@render children?.()}
 		</div>

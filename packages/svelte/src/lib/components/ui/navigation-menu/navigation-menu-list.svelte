@@ -22,7 +22,7 @@
 					"group isolate flex flex-1 list-none items-center justify-center gap-1",
 					className,
 				])}
-				use:indicator={{ active: ACTIVE, className: "glass-neutral rounded-md" }}
+				use:indicator={{ active: ACTIVE }}
 			>
 				{@render children?.()}
 			</ul>

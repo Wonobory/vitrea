@@ -1,3 +1,5 @@
+import { offsetWithin } from "$lib/utils";
+import { reducedMotion } from "$lib/transitions";
 /** `use:fuse={{ items, on, className }}` on the container: consecutive items that are on share one piece of glass. Items must paint above it (`relative z-10`). */
 export type FuseOptions = {
 	/** Selector of the items, relative to the container. */
@@ -16,33 +18,24 @@ type Run = { el: HTMLSpanElement; a: number; b: number };
 
 export const fuse = (node: HTMLElement, options: FuseOptions) => {
 	let o = options;
-	const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 	if (getComputedStyle(node).position === "static") node.style.position = "relative";
 	let runs: Run[] = [];
 
-	const offset = (el: HTMLElement) => {
-		let x = 0;
-		let y = 0;
-		for (
-			let n: HTMLElement | null = el;
-			n && n !== node;
-			n = n.offsetParent as HTMLElement | null
-		) {
-			x += n.offsetLeft;
-			y += n.offsetTop;
-		}
-		return { x, y };
+	type Box = { x: number; y: number; w: number; h: number };
+	const boxOf = (first: HTMLElement, last: HTMLElement): Box => {
+		const p = offsetWithin(first, node);
+		const q = offsetWithin(last, node);
+		return { x: p.x, y: p.y, w: q.x + last.offsetWidth - p.x, h: q.y + last.offsetHeight - p.y };
 	};
-
-	const place = (el: HTMLElement, first: HTMLElement, last: HTMLElement, animate: boolean) => {
-		const p = offset(first);
-		const q = offset(last);
+	const place = (el: HTMLElement, b: Box, animate: boolean) => {
 		const curve = "300ms var(--spring-small)";
 		el.style.transition =
-			animate && !reduced.matches ? `translate ${curve}, width ${curve}, height ${curve}` : "none";
-		el.style.translate = `${p.x}px ${p.y}px`;
-		el.style.width = `${q.x + last.offsetWidth - p.x}px`;
-		el.style.height = `${q.y + last.offsetHeight - p.y}px`;
+			animate && !reducedMotion.current
+				? `translate ${curve}, width ${curve}, height ${curve}`
+				: "none";
+		el.style.translate = `${b.x}px ${b.y}px`;
+		el.style.width = `${b.w}px`;
+		el.style.height = `${b.h}px`;
 	};
 
 	const measure = (animate: boolean) => {
@@ -55,21 +48,22 @@ export const fuse = (node: HTMLElement, options: FuseOptions) => {
 			else spans.push([i, i]);
 		});
 
+		const boxes = spans.map(([a, b]) => boxOf(items[a]!, items[b]!));
 		const next: Run[] = [];
-		for (const [a, b] of spans) {
+		for (const [i, [a, b]] of spans.entries()) {
 			let run = runs.find((r) => !next.includes(r) && r.a <= b && a <= r.b);
 			if (run) {
 				run.a = a;
 				run.b = b;
-				place(run.el, items[a]!, items[b]!, animate);
+				place(run.el, boxes[i]!, animate);
 			} else {
 				const el = document.createElement("span");
 				el.dataset.fuse = "";
 				el.setAttribute("aria-hidden", "true");
 				el.className = `pointer-events-none absolute top-0 left-0 ${o.className}`;
-				place(el, items[a]!, items[b]!, false);
+				place(el, boxes[i]!, false);
 				node.prepend(el);
-				if (animate && !reduced.matches)
+				if (animate && !reducedMotion.current)
 					el.animate(
 						[
 							{ opacity: 0, scale: 0.85 },
@@ -83,7 +77,7 @@ export const fuse = (node: HTMLElement, options: FuseOptions) => {
 		}
 		for (const r of runs) {
 			if (next.includes(r)) continue;
-			if (animate && !reduced.matches)
+			if (animate && !reducedMotion.current)
 				r.el
 					.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 120 })
 					.finished.then(() => r.el.remove());

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Component } from "svelte";
+	import { cn } from "$lib/utils.js";
 
 	let { pressed, icon: IconComponent }: { pressed: boolean; icon: Component<{ class?: string }> } =
 		$props();
@@ -15,9 +16,11 @@
 <span class="relative grid size-4 shrink-0 place-items-center">
 	{#key beat}
 		<IconComponent
-			class={["size-4 transition-colors", pressed && "fill-current text-primary", beat && "beating"]
-				.filter(Boolean)
-				.join(" ")}
+			class={cn([
+				"size-4 transition-colors",
+				pressed && "fill-current text-primary",
+				beat && "beating",
+			])}
 		/>
 		{#if beat && pressed}
 			<span class="ring" aria-hidden="true"></span>

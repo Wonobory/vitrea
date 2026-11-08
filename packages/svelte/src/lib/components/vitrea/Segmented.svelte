@@ -1,7 +1,7 @@
 <script lang="ts" generics="T extends string">
 	import { onMount, untrack, type Snippet } from "svelte";
 	import { Tween } from "svelte/motion";
-	import { MediaQuery } from "svelte/reactivity";
+	import { reducedMotion as reduced } from "$lib/transitions";
 	import { springSmall } from "$lib/springs";
 	import { stretchSpring, GLASS_SELECTOR } from "$lib/glass";
 	import Lens from "$lib/components/vitrea/Lens.svelte";
@@ -60,16 +60,9 @@
 	let group = $state<HTMLDivElement>();
 
 	const onKey = (e: KeyboardEvent) => {
-		const d =
-			e.key === "ArrowRight"
-				? 1
-				: e.key === "ArrowLeft"
-					? -1
-					: rows > 1 && e.key === "ArrowDown"
-						? cols
-						: rows > 1 && e.key === "ArrowUp"
-							? -cols
-							: 0;
+		const keys: Record<string, number> = { ArrowRight: 1, ArrowLeft: -1 };
+		if (rows > 1) Object.assign(keys, { ArrowDown: cols, ArrowUp: -cols });
+		const d = keys[e.key];
 		if (!d) return;
 		e.preventDefault();
 		const n = (i + d + options.length) % options.length;
@@ -87,12 +80,7 @@
 
 	let width = $state(0);
 	let height = $state(0);
-	const reduced = new MediaQuery("prefers-reduced-motion: reduce");
-	let mounted = $state(false);
-	onMount(() => {
-		mounted = true;
-		return () => grow.stop();
-	});
+	onMount(() => () => grow.stop());
 
 	const TRAVEL = 350;
 	const pos = new Tween(
@@ -123,7 +111,7 @@
 	});
 	const lw = $derived(itemW * (1 + 0.25 * stretch));
 	const lh = $derived(itemH * (1 + 0.25 * stretch));
-	const showGlass = $derived(glass && mounted && width > 0 && itemH > 0);
+	const showGlass = $derived(glass && width > 0 && itemH > 0);
 
 	const button = $derived(compact ? "px-0.5 text-2xs" : "px-3 text-xs");
 </script>
@@ -149,7 +137,7 @@
 		<div
 			aria-hidden="true"
 			class={[
-				"pointer-events-none absolute top-1 left-1 rounded-md transition-transform duration-250 ease-[cubic-bezier(0.25,1,0.5,1)] motion-reduce:transition-none",
+				"pointer-events-none absolute top-1 left-1 rounded-md transition-transform duration-250 ease-[cubic-bezier(0.25,1,0.5,1)]",
 				subtle ? "bg-background shadow-sm ring-1 ring-border" : "bg-primary",
 			]}
 			style:width="calc((100% - 0.5rem) / {cols})"
@@ -232,19 +220,9 @@
 	}
 	.rim {
 		transform: translate(-50%, -50%);
-		background: transparent;
-		box-shadow:
-			inset 0 1px 0 rgb(255 255 255 / 0.7),
-			inset 0 0 0 1px rgb(0 0 0 / 0.06),
-			0 1px 3px rgb(0 0 0 / 0.12),
-			0 4px 10px -4px rgb(0 0 0 / 0.18);
+		box-shadow: var(--glass-rim);
 	}
 	:global(.dark) .rim {
-		background: rgb(255 255 255 / 0.06);
-		box-shadow:
-			inset 0 1px 0 rgb(255 255 255 / 0.18),
-			inset 0 0 0 1px rgb(255 255 255 / 0.08),
-			0 1px 3px rgb(0 0 0 / 0.4),
-			0 4px 10px -4px rgb(0 0 0 / 0.5);
+		background: var(--glass-veil);
 	}
 </style>

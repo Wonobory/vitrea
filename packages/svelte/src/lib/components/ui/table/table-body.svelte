@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { reducedMotion } from "$lib/transitions";
 	import { cn, type WithElementRef } from "$lib/utils.js";
 	import type { HTMLAttributes } from "svelte/elements";
 
@@ -21,23 +22,27 @@
 
 	onMount(() => {
 		const body = ref!;
-		const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 		const rows = () => [...body.children] as HTMLElement[];
-		let before = new Map(rows().map((r) => [r, r.offsetTop]));
+		const curve =
+			getComputedStyle(document.documentElement).getPropertyValue("--spring-small").trim() ||
+			"ease-out";
+		let before = new Map<HTMLElement, number>();
 		const measure = () => (before = new Map(rows().map((r) => [r, r.offsetTop])));
+		measure();
 		const mo = new MutationObserver(() => {
-			const curve =
-				getComputedStyle(document.documentElement).getPropertyValue("--spring-small").trim() ||
-				"ease-out";
+			const now = new Map<HTMLElement, number>();
+			const animate = !reducedMotion.current;
 			for (const r of rows()) {
-				const d = (before.get(r) ?? r.offsetTop) - r.offsetTop;
-				if (d && !reduced.matches)
+				const top = r.offsetTop;
+				now.set(r, top);
+				const d = (before.get(r) ?? top) - top;
+				if (d && animate)
 					r.animate([{ translate: `0 ${d}px` }, { translate: "0 0" }], {
 						duration: 500,
 						easing: curve,
 					});
 			}
-			measure();
+			before = now;
 		});
 		mo.observe(body, { childList: true });
 		const ro = new ResizeObserver(measure);

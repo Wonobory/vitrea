@@ -40,10 +40,6 @@
 	.pill[aria-pressed="true"] {
 		color: var(--foreground);
 	}
-	.pill:focus-visible {
-		outline: 2px solid var(--ring);
-		outline-offset: 2px;
-	}
 	.pill.zero {
 		opacity: 0.45;
 	}
@@ -88,10 +84,5 @@
 		background: var(--primary);
 		color: var(--primary-foreground);
 		opacity: 1;
-	}
-	@media (prefers-reduced-motion: reduce) {
-		.check :global(svg) {
-			transition: none;
-		}
 	}
 </style>

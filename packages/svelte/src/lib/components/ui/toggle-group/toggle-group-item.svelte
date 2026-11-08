@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { ToggleGroup as ToggleGroupPrimitive } from "bits-ui";
-	import { getToggleGroupCtx, TINT } from "./toggle-group.svelte";
+	import { getToggleGroupCtx } from "./toggle-group.svelte";
+	import { TINT } from "$lib/components/ui/button/button.svelte";
 	import { cn } from "$lib/utils.js";
 	import {
 		type ToggleVariants,
@@ -23,54 +24,34 @@
 	const v = $derived(ctx.variant || variant);
 	const single = $derived(ctx.type === "single");
 	const inTray = $derived(ctx.spacing === 0);
+	const s = $derived(ctx.size || size);
+	const look = (pressed: boolean) =>
+		single
+			? ["relative z-10 shrink-0 data-[state=on]:text-foreground", inTray && "h-8"]
+			: inTray
+				? "relative z-10 h-8 shrink-0 hover:bg-foreground/[0.04] aria-pressed:text-primary data-[state=on]:text-primary data-[state=on]:hover:bg-transparent"
+				: [
+						"relative shrink-0",
+						pressed ? ["glass-neutral aria-pressed:text-primary", TINT] : glassToggle(v, false),
+					];
 </script>
 
 <ToggleGroupPrimitive.Item
 	bind:ref
 	data-slot="toggle-group-item"
 	data-variant={v}
-	data-size={ctx.size || size}
+	data-size={s}
 	data-spacing={ctx.spacing}
 	{value}
 	{...restProps}
 >
 	{#snippet child({ props, pressed })}
-		{#if single}
-			<button
-				{...props}
-				class={cn([
-					toggleVariants({ variant: v, size: ctx.size || size }),
-					"relative z-10 shrink-0 data-[state=on]:text-foreground",
-					inTray && "h-8",
-					className,
-				])}
-			>
-				{@render children?.({ pressed })}
-			</button>
-		{:else if inTray}
-			<button
-				{...props}
-				class={cn([
-					toggleVariants({ variant: v, size: ctx.size || size }),
-					"relative z-10 h-8 shrink-0 hover:bg-foreground/[0.04] aria-pressed:text-primary data-[state=on]:text-primary data-[state=on]:hover:bg-transparent",
-					className,
-				])}
-			>
-				{@render children?.({ pressed })}
-			</button>
-		{:else}
-			<button
-				{...props}
-				use:press
-				class={cn([
-					toggleVariants({ variant: v, size: ctx.size || size }),
-					"relative shrink-0",
-					pressed ? cn(["glass-neutral aria-pressed:text-primary", TINT]) : glassToggle(v, false),
-					className,
-				])}
-			>
-				{@render children?.({ pressed })}
-			</button>
-		{/if}
+		<button
+			{...props}
+			use:press={!single && !inTray}
+			class={cn([toggleVariants({ variant: v, size: s }), look(pressed), className])}
+		>
+			{@render children?.({ pressed })}
+		</button>
 	{/snippet}
 </ToggleGroupPrimitive.Item>

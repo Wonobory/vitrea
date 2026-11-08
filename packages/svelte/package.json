@@ -14,8 +14,14 @@
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
 	},
-	"files": ["dist", "!dist/**/*.test.*", "!dist/**/*.spec.*"],
-	"sideEffects": ["**/*.css"],
+	"files": [
+		"dist",
+		"!dist/**/*.test.*",
+		"!dist/**/*.spec.*"
+	],
+	"sideEffects": [
+		"**/*.css"
+	],
 	"svelte": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"exports": {
@@ -30,9 +36,9 @@
 		}
 	},
 	"dependencies": {
-		"@vitreakit/core": "workspace:^",
 		"@internationalized/date": "^3.12.0",
 		"@lucide/svelte": "^1.31.0",
+		"@vitreakit/core": "workspace:^",
 		"bits-ui": "^2.18.1",
 		"clsx": "^2.1.1",
 		"embla-carousel-svelte": "^8.6.0",
@@ -45,18 +51,26 @@
 		"vaul-svelte": "^1.0.0-next.7"
 	},
 	"peerDependencies": {
-		"svelte": "^5.0.0",
-		"tailwindcss": "^4.0.0",
 		"@tanstack/table-core": "^8.0.0",
 		"formsnap": "^2.0.0",
 		"layerchart": "2.0.0-next.48",
-		"sveltekit-superforms": "^2.0.0"
+		"svelte": "^5.0.0",
+		"sveltekit-superforms": "^2.0.0",
+		"tailwindcss": "^4.0.0"
 	},
 	"peerDependenciesMeta": {
-		"@tanstack/table-core": { "optional": true },
-		"formsnap": { "optional": true },
-		"layerchart": { "optional": true },
-		"sveltekit-superforms": { "optional": true }
+		"@tanstack/table-core": {
+			"optional": true
+		},
+		"formsnap": {
+			"optional": true
+		},
+		"layerchart": {
+			"optional": true
+		},
+		"sveltekit-superforms": {
+			"optional": true
+		}
 	},
 	"devDependencies": {
 		"@fontsource-variable/archivo": "^5.3.0",
@@ -71,7 +85,6 @@
 		"formsnap": "^2.0.1",
 		"layerchart": "2.0.0-next.48",
 		"publint": "^0.3.0",
-		"shadcn-svelte": "^1.4.1",
 		"shiki": "^3.13.0",
 		"svelte": "^5.55.2",
 		"svelte-check": "^4.4.6",
@@ -80,5 +93,16 @@
 		"typescript": "^6.0.2",
 		"vite": "^8.0.7"
 	},
-	"keywords": ["svelte", "svelte5", "components", "ui", "glass", "liquid-glass", "glassmorphism", "tailwindcss", "shadcn-svelte", "bits-ui"]
+	"keywords": [
+		"svelte",
+		"svelte5",
+		"components",
+		"ui",
+		"glass",
+		"liquid-glass",
+		"glassmorphism",
+		"tailwindcss",
+		"shadcn-svelte",
+		"bits-ui"
+	]
 }

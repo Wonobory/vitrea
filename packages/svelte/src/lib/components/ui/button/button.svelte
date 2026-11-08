@@ -3,14 +3,17 @@
 	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from "svelte/elements";
 	import { type VariantProps, tv } from "tailwind-variants";
 
+	/** Primary tint for neutral glass (the secondary button, selected toggles). */
+	export const TINT =
+		"text-primary [--glass-veil:color-mix(in_oklab,var(--primary)_12%,transparent)] [--glass-veil-over:color-mix(in_oklab,var(--primary)_18%,transparent)]";
+
 	export const buttonVariants = tv({
 		base: "focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-md border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-3 aria-invalid:ring-3 [&_svg:not([class*='size-'])]:size-4 group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap transition-colors outline-none select-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
 		variants: {
 			variant: {
 				default: "glass-fill border-0 dark:border",
 				outline: "glass-neutral",
-				secondary:
-					"glass-neutral text-primary [--glass-veil:color-mix(in_oklab,var(--primary)_12%,transparent)] [--glass-veil-over:color-mix(in_oklab,var(--primary)_18%,transparent)]",
+				secondary: `glass-neutral ${TINT}`,
 				ghost: "glass-ghost",
 				destructive:
 					"glass-fill border-0 dark:border [--tone:var(--danger)] dark:[--tone:oklch(0.55_0.2_25)]",
@@ -61,13 +64,7 @@
 		...restProps
 	}: ButtonProps = $props();
 
-	const glass = $derived(
-		variant === "default" ||
-			variant === "outline" ||
-			variant === "secondary" ||
-			variant === "ghost" ||
-			variant === "destructive"
-	);
+	const glass = $derived(variant !== "link");
 </script>
 
 {#if href}

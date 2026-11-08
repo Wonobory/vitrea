@@ -2,7 +2,6 @@
 	import { onMount, type Snippet } from "svelte";
 	import { glassMapCached, type GlassParams } from "$lib/glass";
 	import { mode } from "mode-watcher";
-	const isDark = () => mode.current === "dark";
 
 	type Props = {
 		/** Lens centre, in px of the container `children` is a copy of. */
@@ -46,17 +45,15 @@
 	}: Props = $props();
 
 	const uid = $props.id();
-	let dark = $state(false);
-	let px = $state(1);
+	let mounted = $state(false);
+	let webkit = $state(false);
 	onMount(() => {
-		dark = isDark();
+		mounted = true;
 		const ua = navigator.userAgent;
-		if (/AppleWebKit/.test(ua) && !/Chrome|Chromium|Android/.test(ua))
-			px = 1 / window.devicePixelRatio;
-		const theme = new MutationObserver(() => (dark = isDark()));
-		theme.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-		return () => theme.disconnect();
+		webkit = /AppleWebKit/.test(ua) && !/Chrome|Chromium|Android/.test(ua);
 	});
+	const dark = $derived(mounted && mode.current === "dark");
+	const px = $derived(webkit ? 1 / window.devicePixelRatio : 1);
 
 	const map = $derived(
 		glassMapCached(shape.w, shape.h, shape.radius, dark ? glass.dark : glass.light)
@@ -74,8 +71,15 @@
 		return `${a} 0 0 0 ${0.5 * (1 - a)}  0 ${b} 0 0 ${0.5 * (1 - b)}  0 0 1 0 0  0 0 0 1 0`;
 	});
 	const id = $derived(
-		`glass-${uid}-${dark ? "d" : "l"}-${Math.round(x * 4)}-${Math.round(y * 4)}-${Math.round(w * 4)}-${Math.round(h * 4)}-${Math.round(specular * 50)}`
+		webkit
+			? `glass-${uid}-${dark ? "d" : "l"}-${Math.round(x * 4)}-${Math.round(y * 4)}-${Math.round(w * 4)}-${Math.round(h * 4)}-${Math.round(specular * 50)}`
+			: `glass-${uid}`
 	);
+	const channels = [
+		[0.2, "1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0", "r"],
+		[0.1, "0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0", "g"],
+		[0, "0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0", "b"],
+	] as const;
 	const k = $derived(1 + (128 * specular) / 255);
 	const shade = $derived(
 		`0 0 ${-specular} 0 ${k}  0 0 ${-specular} 0 ${k}  0 0 ${-specular} 0 ${k}  0 0 0 0 1`
@@ -106,30 +110,16 @@
 		/>
 		<feComposite in="raw" in2="neutral" operator="over" result="map0" />
 		<feColorMatrix in="map0" values={shrink} result="map" />
-		<feDisplacementMap
-			in="SourceGraphic"
-			in2="map"
-			scale={scale * px * (1 + 0.2 * chroma)}
-			xChannelSelector="R"
-			yChannelSelector="G"
-		/>
-		<feColorMatrix values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="r" />
-		<feDisplacementMap
-			in="SourceGraphic"
-			in2="map"
-			scale={scale * px * (1 + 0.1 * chroma)}
-			xChannelSelector="R"
-			yChannelSelector="G"
-		/>
-		<feColorMatrix values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="g" />
-		<feDisplacementMap
-			in="SourceGraphic"
-			in2="map"
-			scale={scale * px}
-			xChannelSelector="R"
-			yChannelSelector="G"
-		/>
-		<feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="b" />
+		{#each channels as [c, values, result] (result)}
+			<feDisplacementMap
+				in="SourceGraphic"
+				in2="map"
+				scale={scale * px * (1 + c * chroma)}
+				xChannelSelector="R"
+				yChannelSelector="G"
+			/>
+			<feColorMatrix {values} {result} />
+		{/each}
 		<feComposite in="r" in2="g" operator="arithmetic" k2="1" k3="1" result="rg" />
 		<feComposite in="rg" in2="b" operator="arithmetic" k2="1" k3="1" result="lens" />
 		{#if dark}

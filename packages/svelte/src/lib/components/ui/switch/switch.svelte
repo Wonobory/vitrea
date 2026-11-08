@@ -2,7 +2,7 @@
 	import { Switch as SwitchPrimitive } from "bits-ui";
 	import { onMount, untrack } from "svelte";
 	import { Tween } from "svelte/motion";
-	import { MediaQuery } from "svelte/reactivity";
+	import { reducedMotion as reduced } from "$lib/transitions";
 	import { createSpringEasing } from "$lib/springs";
 	import { stretchSpring } from "$lib/glass";
 	import { cn, type WithoutChildrenOrChild } from "$lib/utils.js";
@@ -25,8 +25,6 @@
 	const s = $derived(SIZES[size]);
 	const PAD = 2;
 	const travel = $derived(s.W - 2 * PAD - s.kw);
-
-	const reduced = new MediaQuery("prefers-reduced-motion: reduce");
 
 	const easing = createSpringEasing(300, 23);
 	const TRAVEL = 320;

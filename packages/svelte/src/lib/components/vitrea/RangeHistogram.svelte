@@ -38,8 +38,10 @@
 
 	const BARS = 36;
 	const t = (v: number) => (log ? Math.log10(v) : v);
-	const position = (v: number) => Math.min(1, Math.max(0, (t(v) - t(lo)) / (t(hi) - t(lo))));
-	const valueAt = (f: number) => (log ? 10 ** (t(lo) + f * (t(hi) - t(lo))) : lo + f * (hi - lo));
+	const tLo = $derived(t(lo));
+	const tSpan = $derived(t(hi) - tLo);
+	const position = (v: number) => Math.min(1, Math.max(0, (t(v) - tLo) / tSpan));
+	const valueAt = (f: number) => (log ? 10 ** (tLo + f * tSpan) : lo + f * (hi - lo));
 
 	let draft = $state<{ min: string; max: string } | null>(null);
 	const minV = $derived(draft ? draft.min : min);
@@ -70,14 +72,10 @@
 	let dragging = $state(false);
 	let nearEdge = $state(false);
 
-	const fraction = (e: PointerEvent) => {
-		const r = canvas!.getBoundingClientRect();
-		return Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
-	};
+	const fraction = (e: PointerEvent, r: DOMRect) =>
+		Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
 
-	const edgeNear = (e: PointerEvent): "min" | "max" | "both" | null => {
-		const width = canvas!.getBoundingClientRect().width;
-		const f = fraction(e);
+	const edgeNear = (f: number, width: number): "min" | "max" | "both" | null => {
 		const nMin = Math.abs(f - fMin) * width < 8;
 		const nMax = Math.abs(f - fMax) * width < 8;
 		return nMin && nMax ? "both" : nMin ? "min" : nMax ? "max" : null;
@@ -85,16 +83,19 @@
 
 	const onDown = (e: PointerEvent) => {
 		(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-		drag = { mode: edgeNear(e) ?? "new", origin: fraction(e), x0: e.clientX };
+		const r = canvas!.getBoundingClientRect();
+		const f = fraction(e, r);
+		drag = { mode: edgeNear(f, r.width) ?? "new", origin: f, x0: e.clientX };
 		dragging = true;
 		draft = { min: minV, max: maxV };
 	};
 
 	const onMove = (e: PointerEvent) => {
-		const f = fraction(e);
+		const r = canvas!.getBoundingClientRect();
+		const f = fraction(e, r);
 		hover = Math.min(BARS - 1, Math.floor(f * BARS));
 		if (!drag) {
-			nearEdge = !!edgeNear(e);
+			nearEdge = !!edgeNear(f, r.width);
 			return;
 		}
 		if (Math.abs(e.clientX - drag.x0) <= 3) return;
@@ -137,14 +138,17 @@
 		`${n.toLocaleString("en-GB")} ${n === 1 ? "auction" : "auctions"}`;
 
 	const readout = $derived.by((): { n: number | null; text: string } => {
-		const [a, b] = [minV, maxV];
+		const a = minV;
+		const b = maxV;
 		if (hover != null && !dragging)
 			return {
 				n: histogram[hover]?.c ?? 0,
 				text: span(round(valueAt(hover / BARS)), round(valueAt((hover + 1) / BARS))),
 			};
 		if (!a && !b) return { n: null, text: sub ? "" : "Drag to choose" };
-		const n = values.filter((v) => (!a || v >= Number(a)) && (!b || v <= Number(b))).length;
+		const from = a ? Number(a) : -Infinity;
+		const to = b ? Number(b) : Infinity;
+		const n = values.filter((v) => v >= from && v <= to).length;
 		const text =
 			a && b
 				? span(Number(a), Number(b))
@@ -156,23 +160,16 @@
 </script>
 
 <div class="flex items-baseline justify-between gap-2 whitespace-nowrap">
-	{#if sub}
-		<p
-			role="heading"
-			aria-level="3"
-			class="shrink-0 text-[10px] tracking-wider text-muted-foreground uppercase"
-		>
-			{title}
-		</p>
-	{:else}
-		<p
-			role="heading"
-			aria-level="2"
-			class="shrink-0 text-[11px] font-semibold tracking-wider text-foreground uppercase"
-		>
-			{title}
-		</p>
-	{/if}
+	<p
+		role="heading"
+		aria-level={sub ? 3 : 2}
+		class={[
+			"shrink-0 tracking-wider uppercase",
+			sub ? "text-3xs text-muted-foreground" : "text-2xs font-semibold text-foreground",
+		]}
+	>
+		{title}
+	</p>
 	<span
 		class="flex min-w-0 items-baseline justify-end gap-1.5 font-mono text-2xs text-muted-foreground tabular-nums"
 	>
@@ -212,13 +209,15 @@
 				style:left="{fMin * 100}%"
 				style:width="{(fMax - fMin) * 100}%"
 			>
-				{#if handles}<span class="handle left"></span><span class="handle right"></span>{/if}
+				{#if handles}<span class="glass-panel handle left"></span><span
+						class="glass-panel handle right"
+					></span>{/if}
 			</span>
 			{#if handles}
 				{#each [[fMin, minV], [fMax, maxV]] as const as [f, v], i (i)}
 					{#if v}
 						<span
-							class={["label", dragging && "visible"]}
+							class={["glass-panel label", dragging && "visible"]}
 							style:left="{f * 100}%"
 							style:translate="{-f * 100}% 0">{short(Number(v))}</span
 						>
@@ -226,7 +225,7 @@
 				{/each}
 			{:else if minV && maxV}
 				<span
-					class={["label", dragging && "visible"]}
+					class={["glass-panel label", dragging && "visible"]}
 					style:left="{((fMin + fMax) / 2) * 100}%"
 					style:translate="{-((fMin + fMax) / 2) * 100}% 0">{span(Number(minV), Number(maxV))}</span
 				>
@@ -252,11 +251,6 @@
 			background-color 200ms,
 			height 400ms cubic-bezier(0.25, 1, 0.5, 1);
 	}
-	@media (prefers-reduced-motion: reduce) {
-		.bar {
-			transition: background-color 200ms;
-		}
-	}
 	.bar.hovered {
 		background-color: color-mix(in oklch, var(--muted-foreground) 45%, transparent);
 	}
@@ -272,21 +266,6 @@
 			var(--primary),
 			color-mix(in oklch, var(--primary) 80%, transparent)
 		);
-	}
-	.frame,
-	.label {
-		--edge: rgb(255 255 255 / 0.55);
-		--veil: rgb(0 0 0 / 0.04);
-		--rim:
-			inset 0 1px 0 rgb(255 255 255 / 0.7), inset 0 0 0 1px rgb(0 0 0 / 0.06),
-			0 1px 3px rgb(0 0 0 / 0.12), 0 4px 10px -4px rgb(0 0 0 / 0.18);
-	}
-	:global(.dark) :is(.frame, .label) {
-		--edge: rgb(255 255 255 / 0.28);
-		--veil: rgb(255 255 255 / 0.06);
-		--rim:
-			inset 0 1px 0 rgb(255 255 255 / 0.18), inset 0 0 0 1px rgb(255 255 255 / 0.08),
-			0 1px 3px rgb(0 0 0 / 0.4), 0 4px 10px -4px rgb(0 0 0 / 0.5);
 	}
 	.frame {
 		position: absolute;
@@ -313,8 +292,6 @@
 		height: 1.75rem;
 		translate: 0 -50%;
 		border-radius: 999px;
-		background: linear-gradient(var(--veil), var(--veil)), var(--card);
-		box-shadow: var(--rim);
 	}
 	.handle::after {
 		content: "";
@@ -340,25 +317,10 @@
 		font-size: 0.625rem;
 		font-variant-numeric: tabular-nums;
 		white-space: nowrap;
-		color: var(--foreground);
-		background: linear-gradient(var(--veil), var(--veil)), var(--card);
-		box-shadow: var(--rim);
 		opacity: 0;
 		transition: opacity 150ms;
 	}
 	.label.visible {
 		opacity: 1;
-	}
-	.handle::before,
-	.label::before {
-		content: "";
-		position: absolute;
-		inset: 0;
-		border-radius: inherit;
-		padding: 1px;
-		background: linear-gradient(135deg, var(--edge), transparent 28% 72%, var(--edge));
-		mask:
-			linear-gradient(#000 0 0) content-box exclude,
-			linear-gradient(#000 0 0);
 	}
 </style>

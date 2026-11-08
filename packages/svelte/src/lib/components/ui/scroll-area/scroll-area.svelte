@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { reducedMotion } from "$lib/transitions";
 	import { ScrollArea as ScrollAreaPrimitive } from "bits-ui";
 	import { Scrollbar } from "./index.js";
 	import { cn, type WithoutChild } from "$lib/utils.js";
@@ -59,6 +60,7 @@
 	};
 	let grab = $state<Drag | null>(null);
 	let glide = 0;
+	$effect(() => () => cancelAnimationFrame(glide));
 	const canX = $derived(orientation !== "vertical");
 	const canY = $derived(orientation !== "horizontal");
 	const dragStart = (e: PointerEvent) => {
@@ -103,7 +105,7 @@
 			capture: true,
 			once: true,
 		});
-		if (e.timeStamp - g.t > 80 || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+		if (e.timeStamp - g.t > 80 || reducedMotion.current) return;
 		let { vx, vy } = g;
 		let last = performance.now();
 		const step = (now: number) => {
@@ -149,10 +151,10 @@
 	>
 		{@render children?.()}
 	</ScrollAreaPrimitive.Viewport>
-	{#if orientation === "vertical" || orientation === "both"}
+	{#if canY}
 		<Scrollbar orientation="vertical" class={scrollbarYClasses} />
 	{/if}
-	{#if orientation === "horizontal" || orientation === "both"}
+	{#if canX}
 		<Scrollbar orientation="horizontal" class={scrollbarXClasses} />
 	{/if}
 	<ScrollAreaPrimitive.Corner />

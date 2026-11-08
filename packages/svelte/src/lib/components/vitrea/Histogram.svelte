@@ -32,7 +32,7 @@
 	const barWidth = $derived(x(step) - x(0));
 
 	const color = (pct: number) =>
-		[...zones].reverse().find(([from]) => pct >= from)?.[1] ?? "var(--muted-foreground)";
+		zones.findLast(([from]) => pct >= from)?.[1] ?? "var(--muted-foreground)";
 
 	const median = $derived.by(() => {
 		let acc = 0;
@@ -151,11 +151,5 @@
 	}
 	.median {
 		transition: translate 650ms var(--spring-small);
-	}
-	@media (prefers-reduced-motion: reduce) {
-		.bar,
-		.median {
-			transition: none;
-		}
 	}
 </style>

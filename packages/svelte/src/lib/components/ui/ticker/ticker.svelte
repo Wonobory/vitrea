@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { cubicOut } from "svelte/easing";
-	import { MediaQuery } from "svelte/reactivity";
 	import { springXSmall } from "$lib/springs";
 	import { cn } from "$lib/utils.js";
-	import { digitSlot } from "$lib/transitions";
+	import { digitSlot, reducedMotion as reduced } from "$lib/transitions";
 
 	type Props = {
 		value: number;
@@ -12,8 +11,6 @@
 		class?: string;
 	};
 	let { value, format = (n) => n.toLocaleString("en-GB"), class: className }: Props = $props();
-
-	const reduced = new MediaQuery("prefers-reduced-motion: reduce");
 
 	// svelte-ignore state_referenced_locally
 	let previous = value;
@@ -52,10 +49,7 @@
 		return {
 			update(next: number) {
 				if (cells[target]!.textContent === String(next)) return;
-				let to =
-					dir > 0
-						? Math.floor(cur) + 1 + (Number.isInteger(cur) ? 0 : 1)
-						: Math.ceil(cur) - 1 - (Number.isInteger(cur) ? 0 : 1);
+				let to = dir > 0 ? Math.ceil(cur) + 1 : Math.floor(cur) - 1;
 				if (to < 1 || to > ROWS - 2) {
 					const k = Math.round(cur) - MID;
 					const seen = [];

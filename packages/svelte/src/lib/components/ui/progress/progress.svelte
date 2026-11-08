@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Progress as ProgressPrimitive } from "bits-ui";
 	import { Tween } from "svelte/motion";
-	import { MediaQuery } from "svelte/reactivity";
+	import { reducedMotion as reduced } from "$lib/transitions";
 	import { cn, type WithoutChildrenOrChild } from "$lib/utils.js";
 	import { cubicOut } from "svelte/easing";
 
@@ -13,7 +13,6 @@
 		...restProps
 	}: WithoutChildrenOrChild<ProgressPrimitive.RootProps> = $props();
 
-	const reduced = new MediaQuery("prefers-reduced-motion: reduce");
 	const pct = (v: number | null | undefined) =>
 		Math.max(0, Math.min(100, (100 * (v ?? 0)) / (max || 1)));
 	// svelte-ignore state_referenced_locally

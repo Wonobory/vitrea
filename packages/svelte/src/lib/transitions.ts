@@ -1,5 +1,6 @@
 import { cubicIn, cubicOut, linear } from "svelte/easing";
 import { slide, type TransitionConfig } from "svelte/transition";
+import { MediaQuery } from "svelte/reactivity";
 import { springXSmall } from "$lib/springs";
 
 export const EXIT = 200;
@@ -38,6 +39,9 @@ export const fadeScale = (_: Element, params: FadeScaleParams = {}): TransitionC
 
 export const modalIn = { duration: 350, easing: springXSmall } satisfies FadeScaleParams;
 
+/** Check marks popping in (`in:scale={checkIn}`). */
+export const checkIn = { duration: 320, start: 0.3, easing: springXSmall };
+
 /** For floating surfaces. Pair with `origin-(--bits-floating-transform-origin)`. */
 export const floatingIn = {
 	duration: 300,
@@ -46,7 +50,7 @@ export const floatingIn = {
 } satisfies FadeScaleParams;
 export const FLOATING_OUT = 120;
 
-const reducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+export const reducedMotion = new MediaQuery("prefers-reduced-motion: reduce");
 
 export const fold = (node: Element): TransitionConfig => {
 	const s = slide(node, { duration: 320, easing: cubicOut });
@@ -60,7 +64,7 @@ export const unfold = (
 	node: HTMLElement,
 	{ duration, easing }: { duration: number; easing?: (t: number) => number }
 ): TransitionConfig => {
-	const base = slide(node, { duration: reducedMotion() ? 0 : duration, easing });
+	const base = slide(node, { duration: reducedMotion.current ? 0 : duration, easing });
 	const rows = [...node.children] as HTMLElement[];
 	const step = Math.min(0.12, 0.5 / Math.max(rows.length, 1));
 	const span = 1 - step * (rows.length - 1);
@@ -103,7 +107,7 @@ export const digitSlot = (
 	const w = node.getBoundingClientRect().width;
 	const y = 0.75 * (going ? -dir : dir);
 	return {
-		duration: reducedMotion() ? 0 : going ? 220 : 420,
+		duration: reducedMotion.current ? 0 : going ? 220 : 420,
 		easing: going ? cubicOut : springXSmall,
 		css: (t) =>
 			`width: ${t * w}px; opacity: ${Math.min(1, t * 1.4)}; transform: translateY(${(1 - t) * y}em)`,

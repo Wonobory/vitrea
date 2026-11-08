@@ -40,9 +40,7 @@
 					use:measure
 					use:indicator={{
 						active: "[data-selected]",
-						attributes: ["data-selected"],
 						curve: "smooth",
-						className: "glass-neutral rounded-md",
 					}}
 				>
 					{@render children?.()}

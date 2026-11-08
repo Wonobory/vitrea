@@ -15,32 +15,23 @@ export type GlassParams = {
 	rimExponent: number;
 };
 
+const LIGHT: GlassParams = {
+	depth: 2,
+	dome: 5,
+	aperture: 0.5,
+	angle: 30,
+	glow: 0.4,
+	spread: 0.5,
+	exponent: 2,
+	rim: 0.5,
+	rimWidth: 1,
+	rimExponent: 1,
+};
+
 /** Default lens parameters per theme. */
 export const GLASS: Record<"light" | "dark", GlassParams> = {
-	light: {
-		depth: 2,
-		dome: 5,
-		aperture: 0.5,
-		angle: 30,
-		glow: 0.4,
-		spread: 0.5,
-		exponent: 2,
-		rim: 0.5,
-		rimWidth: 1,
-		rimExponent: 1,
-	},
-	dark: {
-		depth: 2,
-		dome: 5,
-		aperture: 0.5,
-		angle: 45,
-		glow: 0.4,
-		spread: 0.5,
-		exponent: 1.5,
-		rim: 0.5,
-		rimWidth: 1,
-		rimExponent: 1.5,
-	},
+	light: LIGHT,
+	dark: { ...LIGHT, angle: 45, exponent: 1.5, rimExponent: 1.5 },
 };
 
 /** Lens parameters for option selectors: flat bevel, highlight on the rim. */
@@ -107,10 +98,13 @@ const cache = new Map<string, string>();
 
 /** Memoised `glassMap`. */
 export const glassMapCached = (width: number, height: number, radius: number, p: GlassParams) => {
-	const k = `${Math.round(width)}|${Math.round(height)}|${Math.round(radius)}|${JSON.stringify(p)}`;
+	const [w, h, r] = [width, height, radius].map(Math.round) as [number, number, number];
+	const k = `${w}|${h}|${r}|${JSON.stringify(p)}`;
 	let url = cache.get(k);
-	if (!url)
-		cache.set(k, (url = glassMap(Math.round(width), Math.round(height), Math.round(radius), p)));
+	if (!url) {
+		if (cache.size >= 32) cache.delete(cache.keys().next().value!);
+		cache.set(k, (url = glassMap(w, h, r, p)));
+	}
 	return url;
 };
 
@@ -166,13 +160,8 @@ export const stretchSpring = (o: {
 };
 
 /** Displacement map of a `width` × `height` lens with corner `radius`, as a data URL for `feImage`. */
-export const glassMap = (
-	width: number,
-	height: number,
-	radius: number,
-	p: GlassParams,
-	side = 128
-) => {
+export const glassMap = (width: number, height: number, radius: number, p: GlassParams) => {
+	const side = 128;
 	const n = width / 2;
 	const l = height / 2;
 	const c = document.createElement("canvas");
@@ -185,7 +174,6 @@ export const glassMap = (
 	const hi = Math.max(0, l - p.depth);
 	const ri = Math.max(0, Math.min(radius, wi, hi));
 	const invSigma = p.depth > 0 ? 1 / (p.depth * Math.SQRT2) : 1e6;
-	const highlight = p.glow > 0 || p.rim > 0;
 	const cos = Math.cos((p.angle * Math.PI) / 180);
 	const sin = Math.sin((p.angle * Math.PI) / 180);
 	const from = (1 - p.spread) * Math.SQRT2;
@@ -229,17 +217,11 @@ export const glassMap = (
 			img.data[k] = Math.round((0.5 - 0.5 * u * bevel) * 255);
 			img.data[k + 1] = Math.round((0.5 - 0.5 * v * bevel) * 255);
 
-			if (highlight) {
-				const e = Math.abs(clamp(x / n) * cos + clamp(y / l) * sin);
-				let s = 0;
-				if (p.glow > 0)
-					s +=
-						p.glow *
-						(span > 0.001 ? Math.min(1, Math.max(0, e - from) / span) : 0) ** p.exponent *
-						bevel;
-				if (p.rim > 0) s += p.rim * Math.max(0, 1 + outside / p.rimWidth) * e ** p.rimExponent;
-				img.data[k + 2] = Math.round(127 * Math.min(1, s) + 128);
-			} else img.data[k + 2] = 128;
+			const e = Math.abs(clamp(x / n) * cos + clamp(y / l) * sin);
+			const glow = (span > 0.001 ? Math.min(1, Math.max(0, e - from) / span) : 0) ** p.exponent;
+			const s =
+				p.glow * glow * bevel + p.rim * Math.max(0, 1 + outside / p.rimWidth) * e ** p.rimExponent;
+			img.data[k + 2] = Math.round(127 * Math.min(1, s) + 128);
 		}
 	g.putImageData(img, 0, 0);
 	return c.toDataURL();

@@ -5,9 +5,7 @@
 	import type { ComponentProps } from "svelte";
 	import { fade } from "svelte/transition";
 	import { floatingIn, fadeScale, FLOATING_OUT } from "$lib/transitions";
-	import { indicator } from "$lib/indicator";
-
-	const HIGHLIGHTED = '[data-highlighted], [data-state="open"][data-slot$="sub-trigger"]';
+	import { indicator, menuHighlight } from "$lib/indicator";
 
 	let {
 		ref = $bindable(null),
@@ -31,12 +29,7 @@
 							"glass-panel z-50 min-w-44 max-h-(--bits-context-menu-content-available-height) origin-(--bits-floating-transform-origin) overflow-x-hidden overflow-y-auto rounded-xl p-1 text-popover-foreground outline-none",
 							className,
 						])}
-						use:indicator={{
-							active: HIGHLIGHTED,
-							attributes: ["data-highlighted"],
-							curve: "smooth",
-							className: "glass-neutral rounded-md",
-						}}
+						use:indicator={menuHighlight}
 						in:fadeScale={floatingIn}
 						out:fade={{ duration: FLOATING_OUT }}
 					>

@@ -3,7 +3,7 @@
 
 	let offWidth = $state(0);
 	let onWidth = $state(0);
-	const ease = "ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none";
+	const ease = "ease-[cubic-bezier(0.22,1,0.36,1)]";
 </script>
 
 <span

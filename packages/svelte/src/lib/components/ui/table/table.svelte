@@ -16,7 +16,6 @@
 	class="relative w-full overflow-x-auto rounded-xl border bg-panel"
 	use:indicator={{
 		active: "tbody > tr[data-highlighted]",
-		attributes: ["data-highlighted"],
 		curve: "smooth",
 		className: "glass-neutral rounded-lg",
 	}}

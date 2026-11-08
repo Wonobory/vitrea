@@ -12,12 +12,12 @@
 <div
 	bind:this={ref}
 	data-slot="skeleton"
-	class={cn(["shimmer relative overflow-hidden rounded-md bg-foreground/8", className])}
+	class={cn(["skeleton relative overflow-hidden rounded-md bg-foreground/8", className])}
 	{...restProps}
 ></div>
 
 <style>
-	.shimmer::after {
+	.skeleton::after {
 		content: "";
 		position: absolute;
 		inset: 0;
@@ -28,9 +28,9 @@
 			color-mix(in oklch, var(--foreground) 7%, transparent),
 			transparent
 		);
-		animation: shimmer 1.6s ease-in-out infinite;
+		animation: skeleton-sweep 1.6s ease-in-out infinite;
 	}
-	@keyframes shimmer {
+	@keyframes skeleton-sweep {
 		to {
 			translate: 100% 0;
 		}

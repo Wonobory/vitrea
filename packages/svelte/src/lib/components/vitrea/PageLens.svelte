@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount, untrack } from "svelte";
 	import { Tween } from "svelte/motion";
-	import { MediaQuery } from "svelte/reactivity";
+	import { reducedMotion as reduced } from "$lib/transitions";
 	import { springSmall } from "$lib/springs";
 	import { stretchSpring, GLASS_SELECTOR } from "$lib/glass";
 	import Lens from "$lib/components/vitrea/Lens.svelte";
@@ -32,7 +32,6 @@
 	const TRAVEL = 420;
 	const MAX_JUMP = 4;
 
-	const reduced = new MediaQuery("prefers-reduced-motion: reduce");
 	const width = $derived(visible * SLOT);
 
 	let fromDrag = false;
@@ -51,19 +50,20 @@
 		});
 	});
 
+	const clampPage = (p: number) => Math.min(pages, Math.max(1, p));
 	const go = (p: number) => {
-		const n = Math.min(pages, Math.max(1, p));
+		const n = clampPage(p);
 		if (n === page) return;
 		page = n;
 		onchange?.(n);
 	};
 
-	const nearby = $derived.by(() => {
-		const r = Math.ceil(visible / 2) + 1;
-		const a = Math.max(1, Math.floor(pos.current) - r);
-		const b = Math.min(pages, Math.ceil(pos.current) + r);
-		return Array.from({ length: Math.max(0, b - a + 1) }, (_, i) => a + i);
-	});
+	const reach = $derived(Math.ceil(visible / 2) + 1);
+	const first = $derived(Math.max(1, Math.floor(pos.current) - reach));
+	const last = $derived(Math.min(pages, Math.ceil(pos.current) + reach));
+	const nearby = $derived(
+		Array.from({ length: Math.max(0, last - first + 1) }, (_, i) => first + i)
+	);
 	const leftOf = (p: number) => width / 2 + (p - pos.current) * SLOT - SLOT / 2;
 
 	let stretch = $state(0);
@@ -79,15 +79,11 @@
 		void pos.current;
 		if (!reduced.current) untrack(() => grow.push());
 	});
-	onMount(() => {
-		mounted = true;
-		return () => grow.stop();
-	});
 	const lw = $derived(LENS.w * (1 + 0.3 * stretch));
 	const lh = $derived(LENS.h * (1 - 0.06 * stretch));
 
 	let grab: { x: number; from: number; moved: boolean; v: number; t: number } | null = null;
-	const under = $derived(Math.min(pages, Math.max(1, Math.round(pos.current))));
+	const under = $derived(clampPage(Math.round(pos.current)));
 	const dragStart = (e: PointerEvent) => {
 		if (e.button !== 0) return;
 		grab = { x: e.clientX, from: pos.current, moved: false, v: 0, t: e.timeStamp };
@@ -115,12 +111,12 @@
 			once: true,
 		});
 		const fling = e.timeStamp - g.t > 80 ? 0 : Math.max(-8, Math.min(8, g.v * 300));
-		const target = Math.min(pages, Math.max(1, Math.round(pos.current + fling)));
-		fromDrag = true;
-		if (target === page) {
-			fromDrag = false;
-			pos.set(page, { duration: reduced.current ? 0 : TRAVEL });
-		} else go(target);
+		const target = clampPage(Math.round(pos.current + fling));
+		if (target === page) pos.set(page, { duration: reduced.current ? 0 : TRAVEL });
+		else {
+			fromDrag = true;
+			go(target);
+		}
 	};
 
 	let track: HTMLElement;
@@ -134,8 +130,9 @@
 				acc -= Math.sign(acc) * 40;
 			}
 		};
+		mounted = true;
 		track.addEventListener("wheel", wheel, { passive: false });
-		return () => track.removeEventListener("wheel", wheel);
+		return () => (track.removeEventListener("wheel", wheel), grow.stop());
 	});
 
 	const onKey = (e: KeyboardEvent) => {
@@ -254,18 +251,9 @@
 	}
 	.rim {
 		transform: translate(-50%, -50%);
-		box-shadow:
-			inset 0 1px 0 rgb(255 255 255 / 0.7),
-			inset 0 0 0 1px rgb(0 0 0 / 0.06),
-			0 1px 3px rgb(0 0 0 / 0.12),
-			0 4px 10px -4px rgb(0 0 0 / 0.18);
+		box-shadow: var(--glass-rim);
 	}
 	:global(.dark) .rim {
-		background: rgb(255 255 255 / 0.06);
-		box-shadow:
-			inset 0 1px 0 rgb(255 255 255 / 0.18),
-			inset 0 0 0 1px rgb(255 255 255 / 0.08),
-			0 1px 3px rgb(0 0 0 / 0.4),
-			0 4px 10px -4px rgb(0 0 0 / 0.5);
+		background: var(--glass-veil);
 	}
 </style>

@@ -2,7 +2,7 @@
 	import { Slider as SliderPrimitive } from "bits-ui";
 	import { onMount, untrack } from "svelte";
 	import { Tween } from "svelte/motion";
-	import { MediaQuery } from "svelte/reactivity";
+	import { reducedMotion as reduced } from "$lib/transitions";
 	import { cn, type WithoutChildrenOrChild } from "$lib/utils.js";
 	import { springSmall } from "$lib/springs";
 	import { stretchSpring, GLASS } from "$lib/glass";
@@ -36,7 +36,6 @@
 	let keyboard = $state(false);
 	let active = $state(0);
 	let backdrop = $state("var(--background)");
-	const reduced = new MediaQuery("prefers-reduced-motion: reduce");
 
 	const glass = new Tween(0, { duration: 500, easing: springSmall });
 	$effect(() => {
@@ -54,8 +53,7 @@
 		stiffness: 180,
 		damping: 14,
 		position: () => cx,
-		target: (vel) =>
-			Math.min(0.35, Math.max(Math.min(0.35, 0.012 * vel ** 0.75), pressed ? 0.175 : 0)),
+		target: (vel) => Math.min(0.35, Math.max(0.012 * vel ** 0.75, pressed ? 0.175 : 0)),
 		paint: (v) => (stretch = v),
 	});
 	$effect(() => {
@@ -84,17 +82,10 @@
 		return () => ro.disconnect();
 	});
 
-	onMount(() => {
-		const release = () => (pressed = false);
-		window.addEventListener("pointerup", release);
-		window.addEventListener("pointercancel", release);
-		return () => {
-			stretchy.stop();
-			window.removeEventListener("pointerup", release);
-			window.removeEventListener("pointercancel", release);
-		};
-	});
+	onMount(() => () => stretchy.stop());
 </script>
+
+<svelte:window onpointerup={() => (pressed = false)} onpointercancel={() => (pressed = false)} />
 
 <SliderPrimitive.Root
 	bind:ref

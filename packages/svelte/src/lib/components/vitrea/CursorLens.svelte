@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount, untrack, type Snippet } from "svelte";
 	import { Spring } from "svelte/motion";
-	import { MediaQuery } from "svelte/reactivity";
+	import { reducedMotion as reduced } from "$lib/transitions";
 	import { GLASS, stretchSpring } from "$lib/glass";
 	import Lens from "$lib/components/vitrea/Lens.svelte";
 
@@ -35,7 +35,6 @@
 	let height = $state(0);
 	let mounted = $state(false);
 	let host: HTMLElement;
-	const reduced = new MediaQuery("prefers-reduced-motion: reduce");
 
 	const big = new Spring({ x: 0, y: 0 }, { stiffness: 0.08, damping: 0.55 });
 	const little = new Spring({ x: 0, y: 0 }, { stiffness: 0.04, damping: 0.6 });
@@ -64,13 +63,18 @@
 		big.set({ x: width * 0.66, y: height * 0.4 }, { instant: true });
 		little.set({ x: width * 0.3, y: height * 0.55 }, { instant: true });
 		let raf = 0;
-		let visible = true;
-		const io = new IntersectionObserver(([e]) => (visible = !!e?.isIntersecting));
+		const io = new IntersectionObserver(([e]) => {
+			if (e?.isIntersecting) raf ||= requestAnimationFrame(drift);
+			else {
+				cancelAnimationFrame(raf);
+				raf = 0;
+			}
+		});
 		io.observe(host);
 		const t0 = performance.now();
 		const drift = (now: number) => {
 			raf = requestAnimationFrame(drift);
-			if (!visible || reduced.current || !width) return;
+			if (reduced.current || !width) return;
 			const t = (now - t0) / 1000;
 			if (!grab) {
 				const pull = 0.03 * Math.min(1, (now - releasedAt) / 1500);
@@ -88,8 +92,7 @@
 			const d = little.target;
 			little.target = { x: d.x + (q.x - d.x) * 0.02, y: d.y + (q.y - d.y) * 0.02 };
 		};
-		raf = requestAnimationFrame(drift);
-		return () => (cancelAnimationFrame(raf), io.disconnect());
+		return () => (cancelAnimationFrame(raf), io.disconnect(), wx.stop(), wy.stop());
 	});
 
 	let sx = $state(0);
@@ -108,7 +111,6 @@
 		void big.current;
 		if (!reduced.current) untrack(() => (wx.push(), wy.push()));
 	});
-	onMount(() => () => (wx.stop(), wy.stop()));
 	const lw = $derived(w * (1 + sx - 0.5 * sy));
 	const lh = $derived(h * (1 + sy - 0.5 * sx));
 </script>

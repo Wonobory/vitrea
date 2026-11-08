@@ -1,9 +1,9 @@
 <script lang="ts">
+	import { checkIn } from "$lib/transitions";
 	import { Select as SelectPrimitive } from "bits-ui";
 	import { cn, type WithoutChild } from "$lib/utils.js";
 	import CheckIcon from "@lucide/svelte/icons/check";
 	import { scale } from "svelte/transition";
-	import { springXSmall } from "$lib/springs";
 
 	let {
 		ref = $bindable(null),
@@ -28,9 +28,7 @@
 	{#snippet children({ selected, highlighted })}
 		<span class="absolute end-2 flex size-3.5 items-center justify-center text-primary">
 			{#if selected}
-				<span in:scale={{ duration: 300, start: 0.3, easing: springXSmall }}
-					><CheckIcon class="size-4 stroke-[2.5]" /></span
-				>
+				<span in:scale={checkIn}><CheckIcon class="size-4 stroke-[2.5]" /></span>
 			{/if}
 		</span>
 		<span class="flex flex-1 gap-2 shrink-0 whitespace-nowrap">

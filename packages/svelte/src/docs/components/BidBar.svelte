@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount, untrack } from "svelte";
 	import { Tween } from "svelte/motion";
-	import { MediaQuery } from "svelte/reactivity";
+	import { reducedMotion as reduced } from "$lib/transitions";
 	import { springSmall } from "$lib/springs";
 	import { stretchSpring, GLASS } from "$lib/glass";
 	import Lens from "$lib/components/vitrea/Lens.svelte";
@@ -58,7 +58,6 @@
 	let width = $state(0);
 	let pressed = $state(false);
 	let keyboard = $state(false);
-	const reduced = new MediaQuery("prefers-reduced-motion: reduce");
 
 	const glass = new Tween(0, { duration: 500, easing: springSmall });
 	$effect(() => {

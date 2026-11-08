@@ -2,11 +2,9 @@
 	import { getContext, setContext } from "svelte";
 	import type { VariantProps } from "tailwind-variants";
 	import { toggleVariants } from "$lib/components/ui/toggle/index.js";
+	import { TINT } from "$lib/components/ui/button/button.svelte";
 
 	type ToggleVariants = VariantProps<typeof toggleVariants>;
-
-	export const TINT =
-		"text-primary [--glass-veil:color-mix(in_oklab,var(--primary)_12%,transparent)] [--glass-veil-over:color-mix(in_oklab,var(--primary)_18%,transparent)]";
 
 	interface ToggleGroupContext extends ToggleVariants {
 		spacing?: number;
@@ -79,18 +77,13 @@
 >
 	{#snippet child({ props })}
 		{#if restProps.type === "single"}
-			<div
-				{...props}
-				style={`--gap: ${spacing}`}
-				class={cn([rootClass, className])}
-				use:indicator={{ active: '[data-state="on"]', className: "glass-neutral rounded-md" }}
-			>
+			<div {...props} style:--gap={spacing} class={cn([rootClass, className])} use:indicator>
 				{@render children?.()}
 			</div>
 		{:else if spacing === 0}
 			<div
 				{...props}
-				style={`--gap: ${spacing}`}
+				style:--gap={spacing}
 				class={cn([rootClass, className])}
 				use:fuse={{
 					items: ':scope > [data-slot="toggle-group-item"]',
@@ -101,7 +94,7 @@
 				{@render children?.()}
 			</div>
 		{:else}
-			<div {...props} style={`--gap: ${spacing}`} class={cn([rootClass, className])}>
+			<div {...props} style:--gap={spacing} class={cn([rootClass, className])}>
 				{@render children?.()}
 			</div>
 		{/if}

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { fieldWell } from "$lib/components/ui/input/field-class.js";
 	import { PinInput as InputOTPPrimitive } from "bits-ui";
 	import { cn } from "$lib/utils.js";
 	import { scale } from "svelte/transition";
@@ -17,7 +18,8 @@
 	bind:ref
 	data-slot="input-otp-slot"
 	class={cn([
-		"relative flex h-12 w-10 items-center justify-center rounded-lg border border-foreground/15 bg-[color-mix(in_oklch,var(--muted)_70%,var(--card))] font-mono text-xl font-medium tabular-nums shadow-[inset_0_1px_2px_rgb(0_0_0/0.06)] outline-none dark:border-input dark:bg-[color-mix(in_oklch,var(--background)_35%,var(--card))] dark:shadow-[inset_0_1px_2px_rgb(0_0_0/0.35)]",
+		fieldWell,
+		"relative flex h-12 w-10 items-center justify-center rounded-lg font-mono text-xl font-medium tabular-nums outline-none",
 		"transition-[background-color,border-color,color,box-shadow] duration-300 [transition-delay:calc(var(--i,0)*45ms)]",
 		"data-active:bg-card data-active:shadow-none data-active:[transition-delay:0ms]",
 		"group-data-[status=verifying]/otp:animate-[otp-wave_1.1s_ease-in-out_infinite] group-data-[status=verifying]/otp:[animation-delay:calc(var(--i,0)*90ms)]",

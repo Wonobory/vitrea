@@ -61,9 +61,7 @@
 	onpointerleave={() => mark(null)}
 	use:indicator={{
 		active: ":scope > [data-highlighted]",
-		attributes: ["data-highlighted"],
 		curve: "smooth",
-		className: "glass-neutral rounded-md",
 	}}
 	{...restProps}
 >

@@ -5,22 +5,22 @@
 @import "@fontsource-variable/archivo/wdth.css";
 
 @theme {
-  --color-band-reject: var(--band-reject);
-  --color-band-decision: var(--band-decision);
-  --color-band-improve: var(--band-improve);
-  --color-band-approve: var(--band-approve);
+	--color-band-reject: var(--band-reject);
+	--color-band-decision: var(--band-decision);
+	--color-band-improve: var(--band-improve);
+	--color-band-approve: var(--band-approve);
 }
 
 :root {
-  --band-reject: oklch(0.52 0.2 25);
-  --band-decision: oklch(0.67 0.2 28);
-  --band-improve: oklch(0.77 0.17 62);
-  --band-approve: oklch(0.68 0.17 150);
+	--band-reject: oklch(0.52 0.2 25);
+	--band-decision: oklch(0.67 0.2 28);
+	--band-improve: oklch(0.77 0.17 62);
+	--band-approve: oklch(0.68 0.17 150);
 }
 
 .dark {
-  --band-reject: color-mix(in oklab, var(--danger) 75%, transparent);
-  --band-decision: color-mix(in oklab, var(--danger) 30%, transparent);
-  --band-improve: color-mix(in oklab, var(--warning) 45%, transparent);
-  --band-approve: color-mix(in oklab, var(--success) 40%, transparent);
+	--band-reject: color-mix(in oklab, var(--danger) 75%, transparent);
+	--band-decision: color-mix(in oklab, var(--danger) 30%, transparent);
+	--band-improve: color-mix(in oklab, var(--warning) 45%, transparent);
+	--band-approve: color-mix(in oklab, var(--success) 40%, transparent);
 }
