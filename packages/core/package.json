@@ -1,0 +1,18 @@
+{
+	"name": "@vitreakit/core",
+	"version": "0.1.0",
+	"description": "Vítrea's design tokens and liquid-glass surfaces for Tailwind CSS v4. Shared by the Svelte and React packages.",
+	"license": "MIT",
+	"author": "Oriol",
+	"type": "module",
+	"files": ["styles.css"],
+	"exports": {
+		"./styles.css": "./styles.css"
+	},
+	"style": "./styles.css",
+	"sideEffects": ["*.css"],
+	"peerDependencies": {
+		"tailwindcss": "^4.0.0"
+	},
+	"keywords": ["tailwindcss", "design-system", "glass", "glassmorphism", "liquid-glass", "design-tokens"]
+}

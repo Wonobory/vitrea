@@ -1,0 +1,6 @@
+packages:
+  - packages/*
+
+# Solo afecta a la web de documentación: un paquete publicado no lleva los parches de sus dependencias.
+patchedDependencies:
+  svelte-sonner@1.2.2: patches/svelte-sonner@1.2.2.patch
