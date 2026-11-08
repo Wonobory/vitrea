@@ -24,18 +24,24 @@
 	} = $props();
 </script>
 
-<!-- A small glass chip with a glass arrow. Shorter spring than a popover: it's a hint, not a surface. -->
 <TooltipPortal {...portalProps}>
-	<TooltipPrimitive.Content bind:ref forceMount data-slot="tooltip-content" {sideOffset} {side} {...restProps}>
+	<TooltipPrimitive.Content
+		bind:ref
+		forceMount
+		data-slot="tooltip-content"
+		{sideOffset}
+		{side}
+		{...restProps}
+	>
 		{#snippet child({ wrapperProps, props, open })}
 			{#if open}
 				<div {...wrapperProps}>
 					<div
 						{...props}
-						class={cn(
+						class={cn([
 							"glass-panel z-50 inline-flex w-fit max-w-xs origin-(--bits-floating-transform-origin) items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium has-data-[slot=kbd]:pr-1.5",
-							className
-						)}
+							className,
+						])}
 						in:fadeScale={{ duration: 220, easing: springXSmall, minScale: 0.85 }}
 						out:fade={{ duration: FLOATING_OUT }}
 					>

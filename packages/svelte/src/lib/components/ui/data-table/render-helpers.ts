@@ -74,13 +74,12 @@ export class RenderSnippetConfig<TProps> {
  * ```
  * @see {@link https://tanstack.com/table/latest/docs/guide/column-defs}
  */
-export function renderComponent<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	T extends Component<any>,
-	Props extends ComponentProps<T>,
->(component: T, props: Props = {} as Props) {
+export const renderComponent = <T extends Component<any>, Props extends ComponentProps<T>>(
+	component: T,
+	props: Props = {} as Props
+) => {
 	return new RenderComponentConfig(component, props);
-}
+};
 
 /**
  * A helper function to help create cells from Svelte Snippets through ColumnDef's `cell` and `header` properties.
@@ -106,6 +105,9 @@ export function renderComponent<
  * ```
  * @see {@link https://tanstack.com/table/latest/docs/guide/column-defs}
  */
-export function renderSnippet<TProps>(snippet: Snippet<[TProps]>, params: TProps = {} as TProps) {
+export const renderSnippet = <TProps>(
+	snippet: Snippet<[TProps]>,
+	params: TProps = {} as TProps
+) => {
 	return new RenderSnippetConfig(snippet, params);
-}
+};

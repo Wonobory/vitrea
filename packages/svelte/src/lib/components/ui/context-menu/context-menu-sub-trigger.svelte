@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { ContextMenu as ContextMenuPrimitive } from "bits-ui";
 	import { cn, type WithoutChild } from "$lib/utils.js";
-	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
+	import ChevronRightIcon from "@lucide/svelte/icons/chevron-right";
 
 	let {
 		ref = $bindable(null),
@@ -18,10 +18,10 @@
 	bind:ref
 	data-slot="context-menu-sub-trigger"
 	data-inset={inset}
-	class={cn(
+	class={cn([
 		"relative rounded-md px-2 py-1.5 text-sm data-inset:pl-8 [&_svg:not([class*='size-'])]:size-4 flex cursor-default items-center outline-hidden select-none data-inset:ps-8 [&_svg]:pointer-events-none [&_svg]:shrink-0",
-		className
-	)}
+		className,
+	])}
 	{...restProps}
 >
 	{@render children?.()}

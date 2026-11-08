@@ -44,7 +44,7 @@
 	} = $props();
 
 	const mergedProps = $derived({
-		class: cn(itemVariants({ variant, size }), className),
+		class: cn([itemVariants({ variant, size }), className]),
 		"data-slot": "item",
 		"data-variant": variant,
 		"data-size": size,

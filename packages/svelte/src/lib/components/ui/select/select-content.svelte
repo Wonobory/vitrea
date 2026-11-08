@@ -23,21 +23,24 @@
 	} = $props();
 </script>
 
-<!-- Floating glass sheet, like the popover: grows from the trigger with the spring.
-     The highlighted option is one piece of glass that slides from row to row
-     and brakes without bouncing, as in Pujarr's place search (`$lib/indicator`,
-     `curve: "smooth"`). Inside the viewport, so it scrolls with the rows. -->
 <SelectPortal {...portalProps}>
-	<SelectPrimitive.Content bind:ref forceMount {sideOffset} {preventScroll} data-slot="select-content" {...restProps}>
+	<SelectPrimitive.Content
+		bind:ref
+		forceMount
+		{sideOffset}
+		{preventScroll}
+		data-slot="select-content"
+		{...restProps}
+	>
 		{#snippet child({ wrapperProps, props, open })}
 			{#if open}
 				<div {...wrapperProps}>
 					<div
 						{...props}
-						class={cn(
+						class={cn([
 							"glass-panel z-50 flex max-h-(--bits-select-content-available-height) min-w-36 origin-(--bits-floating-transform-origin) flex-col overflow-hidden rounded-xl p-1 text-popover-foreground",
-							className
-						)}
+							className,
+						])}
 						in:fadeScale={floatingIn}
 						out:fade={{ duration: FLOATING_OUT }}
 					>
@@ -45,7 +48,12 @@
 						<SelectPrimitive.Viewport class="w-full min-w-(--bits-select-anchor-width) scroll-my-1">
 							<div
 								class="relative"
-								use:indicator={{ active: "[data-highlighted]", attributes: ["data-highlighted"], curve: "smooth", className: "glass-neutral rounded-lg" }}
+								use:indicator={{
+									active: "[data-highlighted]",
+									attributes: ["data-highlighted"],
+									curve: "smooth",
+									className: "glass-neutral rounded-lg",
+								}}
 							>
 								{@render children?.()}
 							</div>

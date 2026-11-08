@@ -1,15 +1,10 @@
-/* The documentation site: Tailwind, the package's own styles (as a user would
-   import them) and what only this site uses (fonts, the bid bar bands). */
 @import "tailwindcss";
 @import "./lib/styles.css";
 @import "@fontsource-variable/jetbrains-mono";
 @import "@fontsource-variable/inter";
-/* Archivo with its `wdth` axis, for titles set at 112% width. `wdth.css` only
-   declares `@font-face`: the .woff2 isn't downloaded until a rule uses it. */
 @import "@fontsource-variable/archivo/wdth.css";
 
 @theme {
-  /* Bands of the bid bar (home page). */
   --color-band-reject: var(--band-reject);
   --color-band-decision: var(--band-decision);
   --color-band-improve: var(--band-improve);
@@ -17,8 +12,6 @@
 }
 
 :root {
-  /* Opaque and saturated: the state colours at half alpha over the grey panel
-     came out as dusty pink, khaki and sage. */
   --band-reject: oklch(0.52 0.2 25);
   --band-decision: oklch(0.67 0.2 28);
   --band-improve: oklch(0.77 0.17 62);

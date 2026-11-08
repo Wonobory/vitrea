@@ -7,26 +7,26 @@
 		base: "focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-md border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-3 aria-invalid:ring-3 [&_svg:not([class*='size-'])]:size-4 group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap transition-colors outline-none select-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
 		variants: {
 			variant: {
-				// Glass (`.glass-*` in app.css, with `press`). Secondary is neutral glass tinted with the brand;
-				// destructive is the filled glass in danger red.
-				// Filled glass has no border in light mode: the base's transparent 1px border let the white
-				// page show around the fill, like a white ring. In dark mode it stays: the dark page outlines it.
 				default: "glass-fill border-0 dark:border",
 				outline: "glass-neutral",
 				secondary:
 					"glass-neutral text-primary [--glass-veil:color-mix(in_oklab,var(--primary)_12%,transparent)] [--glass-veil-over:color-mix(in_oklab,var(--primary)_18%,transparent)]",
 				ghost: "glass-ghost",
-				destructive: "glass-fill border-0 dark:border [--tone:var(--danger)] dark:[--tone:oklch(0.55_0.2_25)]",
+				destructive:
+					"glass-fill border-0 dark:border [--tone:var(--danger)] dark:[--tone:oklch(0.55_0.2_25)]",
 				link: "text-primary underline-offset-4 hover:underline",
 			},
 			size: {
-				default: "h-9 gap-1.5 px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
+				default:
+					"h-9 gap-1.5 px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
 				xs: "h-6 gap-1 rounded-[min(var(--radius-md),8px)] px-2 text-xs in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
 				sm: "h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5",
 				lg: "h-10 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
 				icon: "size-9",
-				"icon-xs": "size-6 rounded-[min(var(--radius-md),8px)] in-data-[slot=button-group]:rounded-md [&_svg:not([class*='size-'])]:size-3",
-				"icon-sm": "size-8 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-md",
+				"icon-xs":
+					"size-6 rounded-[min(var(--radius-md),8px)] in-data-[slot=button-group]:rounded-md [&_svg:not([class*='size-'])]:size-3",
+				"icon-sm":
+					"size-8 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-md",
 				"icon-lg": "size-10",
 			},
 		},
@@ -61,8 +61,13 @@
 		...restProps
 	}: ButtonProps = $props();
 
-	/** Glass variants scale on press and hover; the rest don't. */
-	const glass = $derived(variant === "default" || variant === "outline" || variant === "secondary" || variant === "ghost" || variant === "destructive");
+	const glass = $derived(
+		variant === "default" ||
+			variant === "outline" ||
+			variant === "secondary" ||
+			variant === "ghost" ||
+			variant === "destructive"
+	);
 </script>
 
 {#if href}
@@ -70,7 +75,7 @@
 		bind:this={ref}
 		data-slot="button"
 		use:press={glass}
-		class={cn(buttonVariants({ variant, size }), className)}
+		class={cn([buttonVariants({ variant, size }), className])}
 		href={disabled ? undefined : href}
 		aria-disabled={disabled}
 		role={disabled ? "link" : undefined}
@@ -84,7 +89,7 @@
 		bind:this={ref}
 		data-slot="button"
 		use:press={glass}
-		class={cn(buttonVariants({ variant, size }), className)}
+		class={cn([buttonVariants({ variant, size }), className])}
 		{type}
 		{disabled}
 		{...restProps}

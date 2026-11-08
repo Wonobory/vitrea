@@ -2,7 +2,7 @@
 	import { Command as CommandPrimitive } from "bits-ui";
 	import { cn } from "$lib/utils.js";
 	import * as InputGroup from "$lib/components/ui/input-group/index.js";
-	import SearchIcon from '@lucide/svelte/icons/search';
+	import SearchIcon from "@lucide/svelte/icons/search";
 
 	let {
 		ref = $bindable(null),
@@ -13,14 +13,16 @@
 </script>
 
 <div data-slot="command-input-wrapper" class="-mx-1 -mt-1 border-b px-1">
-	<InputGroup.Root class="h-11! border-0! bg-transparent! shadow-none! ring-0! *:data-[slot=input-group-addon]:pl-2.5!">
+	<InputGroup.Root
+		class="h-11! border-0! bg-transparent! shadow-none! ring-0! *:data-[slot=input-group-addon]:pl-2.5!"
+	>
 		<CommandPrimitive.Input
 			{value}
 			data-slot="command-input"
-			class={cn(
+			class={cn([
 				"w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
-				className
-			)}
+				className,
+			])}
 			{...restProps}
 		>
 			{#snippet child({ props })}

@@ -15,9 +15,9 @@
 	bind:ref
 	data-slot="button-group-separator"
 	{orientation}
-	class={cn(
+	class={cn([
 		"relative z-10 self-center bg-foreground/12 data-[orientation=vertical]:h-4 data-[orientation=horizontal]:mx-1.5 data-[orientation=horizontal]:w-auto",
-		className
-	)}
+		className,
+	])}
 	{...restProps}
 />

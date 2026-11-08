@@ -7,5 +7,9 @@
 		"build": "pnpm --filter @vitreakit/svelte build",
 		"package": "pnpm --filter @vitreakit/svelte package",
 		"check": "pnpm --filter @vitreakit/svelte check"
+	},
+	"devDependencies": {
+		"prettier": "^3.9.10",
+		"prettier-plugin-svelte": "^4.1.1"
 	}
 }

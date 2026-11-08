@@ -27,17 +27,17 @@
 		monthIndex: number;
 	} = $props();
 
-	function formatYear(date: DateValue) {
+	const formatYear = (date: DateValue) => {
 		const dateObj = date.toDate(getLocalTimeZone());
 		if (typeof yearFormat === "function") return yearFormat(dateObj.getFullYear());
 		return new DateFormatter(locale, { year: yearFormat }).format(dateObj);
-	}
+	};
 
-	function formatMonth(date: DateValue) {
+	const formatMonth = (date: DateValue) => {
 		const dateObj = date.toDate(getLocalTimeZone());
 		if (typeof monthFormat === "function") return monthFormat(dateObj.getMonth() + 1);
 		return new DateFormatter(locale, { month: monthFormat }).format(dateObj);
-	}
+	};
 </script>
 
 {#snippet MonthSelect()}

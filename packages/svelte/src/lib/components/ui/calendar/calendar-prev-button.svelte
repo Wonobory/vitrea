@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { press } from "$lib/press";
 	import { Calendar as CalendarPrimitive } from "bits-ui";
-	import ChevronLeftIcon from '@lucide/svelte/icons/chevron-left';
+	import ChevronLeftIcon from "@lucide/svelte/icons/chevron-left";
 	import { buttonVariants, type ButtonVariant } from "$lib/components/ui/button/index.js";
 	import { cn } from "$lib/utils.js";
 
@@ -17,16 +17,19 @@
 </script>
 
 {#snippet Fallback()}
-	<ChevronLeftIcon class={cn("size-4", className)} />
+	<ChevronLeftIcon class={cn(["size-4", className])} />
 {/snippet}
 
-<!-- With `press`, so the ghost glass shows on hover and press like any Button. -->
 <CalendarPrimitive.PrevButton bind:ref {...restProps}>
 	{#snippet child({ props })}
 		<button
 			{...props}
 			use:press
-			class={cn(buttonVariants({ variant }), "size-(--cell-size) p-0 select-none disabled:opacity-50 rtl:rotate-180", className)}
+			class={cn([
+				buttonVariants({ variant }),
+				"size-(--cell-size) p-0 select-none disabled:opacity-50 rtl:rotate-180",
+				className,
+			])}
 		>
 			{#if children}
 				{@render children?.()}

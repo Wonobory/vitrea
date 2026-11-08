@@ -33,10 +33,16 @@
 		<Dialog.Description>{description}</Dialog.Description>
 	</Dialog.Header>
 	<Dialog.Content
-		class={cn("top-1/3 translate-y-0 overflow-hidden rounded-2xl p-0 sm:max-w-lg", className)}
+		class={cn(["top-1/3 translate-y-0 overflow-hidden rounded-2xl p-0 sm:max-w-lg", className])}
 		{showCloseButton}
 		{portalProps}
 	>
-		<Command {...restProps} bind:value bind:ref {children} class="rounded-none bg-transparent shadow-none before:hidden" />
+		<Command
+			{...restProps}
+			bind:value
+			bind:ref
+			{children}
+			class="rounded-none bg-transparent shadow-none before:hidden"
+		/>
 	</Dialog.Content>
 </Dialog.Root>

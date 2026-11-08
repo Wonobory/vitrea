@@ -20,18 +20,24 @@
 	} = $props();
 </script>
 
-<!-- Glass sheet that grows from the link (see popover-content). -->
 <HoverCardPortal {...portalProps}>
-	<HoverCardPrimitive.Content bind:ref forceMount data-slot="hover-card-content" {align} {sideOffset} {...restProps}>
+	<HoverCardPrimitive.Content
+		bind:ref
+		forceMount
+		data-slot="hover-card-content"
+		{align}
+		{sideOffset}
+		{...restProps}
+	>
 		{#snippet child({ wrapperProps, props, open })}
 			{#if open}
 				<div {...wrapperProps}>
 					<div
 						{...props}
-						class={cn(
+						class={cn([
 							"glass-panel z-50 w-64 origin-(--bits-floating-transform-origin) rounded-xl p-4 text-sm text-popover-foreground outline-hidden",
-							className
-						)}
+							className,
+						])}
 						in:fadeScale={floatingIn}
 						out:fade={{ duration: FLOATING_OUT }}
 					>

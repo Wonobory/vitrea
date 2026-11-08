@@ -14,7 +14,8 @@
 	}: WithoutChildrenOrChild<ProgressPrimitive.RootProps> = $props();
 
 	const reduced = new MediaQuery("prefers-reduced-motion: reduce");
-	const pct = (v: number | null | undefined) => Math.max(0, Math.min(100, (100 * (v ?? 0)) / (max || 1)));
+	const pct = (v: number | null | undefined) =>
+		Math.max(0, Math.min(100, (100 * (v ?? 0)) / (max || 1)));
 	// svelte-ignore state_referenced_locally
 	const width = new Tween(pct(value), { duration: 400, easing: cubicOut });
 	$effect(() => {
@@ -22,13 +23,13 @@
 	});
 </script>
 
-<!-- The fill is filled glass and eases to each new value, without overshoot: a bar that passes
-     its value and comes back reads as wrong progress. It grows in width
-     (not a translate) so the glass rim stays round at both ends. -->
 <ProgressPrimitive.Root
 	bind:ref
 	data-slot="progress"
-	class={cn("relative flex h-2 w-full items-center rounded-full bg-foreground/8 p-px shadow-[inset_0_1px_2px_rgb(0_0_0/0.12)]", className)}
+	class={cn([
+		"relative flex h-2 w-full items-center rounded-full bg-foreground/8 p-px shadow-[inset_0_1px_2px_rgb(0_0_0/0.12)]",
+		className,
+	])}
 	{value}
 	{max}
 	{...restProps}

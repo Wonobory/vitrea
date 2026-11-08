@@ -1,11 +1,4 @@
 <script lang="ts">
-	/**
-	 * Two words for the two states ("Follow" / "Following"), from Pujarr's
-	 * follow button: both live in the same cell; the leaving one slides up and
-	 * fades fast, the arriving one rises from below a beat later (halfway you'd
-	 * otherwise read both), and the width eases from one word to the other
-	 * instead of jumping. The hidden word is `aria-hidden`.
-	 */
 	let { pressed, on, off }: { pressed: boolean; on: string; off: string } = $props();
 
 	let offWidth = $state(0);

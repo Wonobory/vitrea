@@ -15,7 +15,7 @@
 
 <FormPrimitive.FieldErrors
 	bind:ref
-	class={cn("text-destructive text-sm font-medium", className)}
+	class={cn(["text-destructive text-sm font-medium", className])}
 	{...restProps}
 >
 	{#snippet children({ errors, errorProps })}
@@ -23,7 +23,7 @@
 			{@render childrenProp({ errors, errorProps })}
 		{:else}
 			{#each errors as error (error)}
-				<div {...errorProps} class={cn(errorClasses)}>{error}</div>
+				<div {...errorProps} class={cn([errorClasses])}>{error}</div>
 			{/each}
 		{/if}
 	{/snippet}

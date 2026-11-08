@@ -15,10 +15,10 @@
 <textarea
 	bind:this={ref}
 	data-slot={dataSlot}
-	class={cn(
-		fieldClass, "flex field-sizing-content min-h-16 w-full px-2.5 py-2 text-base md:text-sm",
-		className
-	)}
+	class={cn([
+		fieldClass,
+		"flex field-sizing-content min-h-16 w-full px-2.5 py-2 text-base md:text-sm",
+		className,
+	])}
 	bind:value
-	{...restProps}
-></textarea>
+	{...restProps}></textarea>

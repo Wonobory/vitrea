@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui";
-	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
+	import ChevronRightIcon from "@lucide/svelte/icons/chevron-right";
 	import { cn } from "$lib/utils.js";
 
 	let {
@@ -18,10 +18,10 @@
 	bind:ref
 	data-slot="dropdown-menu-sub-trigger"
 	data-inset={inset}
-	class={cn(
+	class={cn([
 		"relative not-data-[variant=destructive]:focus:**:text-accent-foreground gap-2 rounded-md px-2 py-1.5 text-sm data-inset:pl-8 [&_svg:not([class*='size-'])]:size-4 flex cursor-default items-center outline-hidden select-none data-[inset]:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0",
-		className
-	)}
+		className,
+	])}
 	{...restProps}
 >
 	{@render children?.()}

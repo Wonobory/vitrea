@@ -3,7 +3,12 @@
 	import * as Calendar from "./index.js";
 	import { cn, type WithoutChildrenOrChild } from "$lib/utils.js";
 	import type { ButtonVariant } from "../button/button.svelte";
-	import { DateFormatter, getLocalTimeZone, isEqualMonth, type DateValue } from "@internationalized/date";
+	import {
+		DateFormatter,
+		getLocalTimeZone,
+		isEqualMonth,
+		type DateValue,
+	} from "@internationalized/date";
 	import type { Snippet } from "svelte";
 	import { fade } from "svelte/transition";
 	import { press } from "$lib/press";
@@ -44,11 +49,6 @@
 		return "long";
 	});
 
-	/**
-	 * With the label caption, the title is a button: it turns the days into the
-	 * twelve months of the year (with the year on arrows). Pick one and you're
-	 * back on its days. No dropdowns.
-	 */
 	let view = $state<"days" | "months">("days");
 	const tz = getLocalTimeZone();
 	const title = $derived(new DateFormatter(locale, { month: "long", year: "numeric" }));
@@ -56,20 +56,16 @@
 	const goTo = (d: DateValue) => (placeholder = d);
 </script>
 
-<!--
-Discriminated Unions + Destructing (required for bindable) do not
-get along, so we shut typescript up by casting `value` to `never`.
--->
 <CalendarPrimitive.Root
 	bind:value={value as never}
 	bind:ref
 	bind:placeholder
 	{weekdayFormat}
 	{disableDaysOutsideMonth}
-	class={cn(
+	class={cn([
 		"p-3 [--cell-radius:var(--radius-md)] [--cell-size:--spacing(9)] bg-panel group/calendar in-data-[slot=card-content]:bg-transparent in-data-[slot=popover-content]:bg-transparent",
-		className
-	)}
+		className,
+	])}
 	{locale}
 	{monthFormat}
 	{yearFormat}
@@ -93,19 +89,24 @@ get along, so we shut typescript up by casting `value` to `never`.
 								onclick={() => (view = view === "days" ? "months" : "days")}
 							>
 								{title.format(month.value.toDate(tz))}
-								<ChevronDownIcon class={cn("size-3.5 opacity-60 transition-transform", view === "months" && "rotate-180")} />
+								<ChevronDownIcon
+									class={cn([
+										"size-3.5 opacity-60 transition-transform",
+										view === "months" && "rotate-180",
+									])}
+								/>
 							</button>
 						{:else}
 							<Calendar.Caption
-							{captionLayout}
-							months={monthsProp}
-							{monthFormat}
-							{years}
-							{yearFormat}
-							month={month.value}
-							bind:placeholder
-							{locale}
-							{monthIndex}
+								{captionLayout}
+								months={monthsProp}
+								{monthFormat}
+								{years}
+								{yearFormat}
+								month={month.value}
+								bind:placeholder
+								{locale}
+								{monthIndex}
 							/>
 						{/if}
 					</Calendar.Header>
@@ -118,9 +119,20 @@ get along, so we shut typescript up by casting `value` to `never`.
 								onkeydown={(e) => e.key === "Escape" && (view = "days")}
 							>
 								<div class="flex items-center justify-between">
-									<Button variant="ghost" size="icon-sm" aria-label="Previous year" onclick={() => goTo(month.value.subtract({ years: 1 }))}><ChevronLeftIcon /></Button>
+									<Button
+										variant="ghost"
+										size="icon-sm"
+										aria-label="Previous year"
+										onclick={() => goTo(month.value.subtract({ years: 1 }))}
+										><ChevronLeftIcon /></Button
+									>
 									<span class="text-sm font-semibold tabular-nums">{month.value.year}</span>
-									<Button variant="ghost" size="icon-sm" aria-label="Next year" onclick={() => goTo(month.value.add({ years: 1 }))}><ChevronRightIcon /></Button>
+									<Button
+										variant="ghost"
+										size="icon-sm"
+										aria-label="Next year"
+										onclick={() => goTo(month.value.add({ years: 1 }))}><ChevronRightIcon /></Button
+									>
 								</div>
 								<div class="grid flex-1 grid-cols-3 gap-1.5">
 									{#each { length: 12 } as _, i (i)}
@@ -128,10 +140,10 @@ get along, so we shut typescript up by casting `value` to `never`.
 										<button
 											type="button"
 											use:press
-											class={cn(
+											class={cn([
 												"rounded-(--cell-radius) text-sm transition-colors",
-												i + 1 === month.value.month ? "glass-fill font-medium" : "glass-ghost"
-											)}
+												i + 1 === month.value.month ? "glass-fill font-medium" : "glass-ghost",
+											])}
 											aria-current={i + 1 === month.value.month ? "date" : undefined}
 											onclick={() => {
 												goTo(m);
@@ -142,35 +154,35 @@ get along, so we shut typescript up by casting `value` to `never`.
 								</div>
 							</div>
 						{/if}
-					<Calendar.Grid class={view === "months" ? "invisible" : undefined}>
-						<Calendar.GridHead>
-							<Calendar.GridRow class="select-none">
-								{#each weekdays as weekday, i (i)}
-									<Calendar.HeadCell>
-										{weekday.slice(0, 2)}
-									</Calendar.HeadCell>
-								{/each}
-							</Calendar.GridRow>
-						</Calendar.GridHead>
-						<Calendar.GridBody>
-							{#each month.weeks as weekDates (weekDates)}
-								<Calendar.GridRow class="mt-2 w-full">
-									{#each weekDates as date (date)}
-										<Calendar.Cell {date} month={month.value}>
-											{#if day}
-												{@render day({
-													day: date,
-													outsideMonth: !isEqualMonth(date, month.value),
-												})}
-											{:else}
-												<Calendar.Day />
-											{/if}
-										</Calendar.Cell>
+						<Calendar.Grid class={view === "months" ? "invisible" : undefined}>
+							<Calendar.GridHead>
+								<Calendar.GridRow class="select-none">
+									{#each weekdays as weekday, i (i)}
+										<Calendar.HeadCell>
+											{weekday.slice(0, 2)}
+										</Calendar.HeadCell>
 									{/each}
 								</Calendar.GridRow>
-							{/each}
-						</Calendar.GridBody>
-					</Calendar.Grid>
+							</Calendar.GridHead>
+							<Calendar.GridBody>
+								{#each month.weeks as weekDates (weekDates)}
+									<Calendar.GridRow class="mt-2 w-full">
+										{#each weekDates as date (date)}
+											<Calendar.Cell {date} month={month.value}>
+												{#if day}
+													{@render day({
+														day: date,
+														outsideMonth: !isEqualMonth(date, month.value),
+													})}
+												{:else}
+													<Calendar.Day />
+												{/if}
+											</Calendar.Cell>
+										{/each}
+									</Calendar.GridRow>
+								{/each}
+							</Calendar.GridBody>
+						</Calendar.Grid>
 					</div>
 				</Calendar.Month>
 			{/each}

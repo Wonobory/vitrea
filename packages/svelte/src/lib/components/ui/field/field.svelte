@@ -40,7 +40,7 @@
 	role="group"
 	data-slot="field"
 	data-orientation={orientation}
-	class={cn(fieldVariants({ orientation }), className)}
+	class={cn([fieldVariants({ orientation }), className])}
 	{...restProps}
 >
 	{@render children?.()}

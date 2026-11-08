@@ -9,7 +9,7 @@
 
 <script lang="ts">
 	import { NavigationMenu as NavigationMenuPrimitive } from "bits-ui";
-	import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
+	import ChevronDownIcon from "@lucide/svelte/icons/chevron-down";
 	let {
 		ref = $bindable(null),
 		class: className,
@@ -21,9 +21,12 @@
 <NavigationMenuPrimitive.Trigger
 	bind:ref
 	data-slot="navigation-menu-trigger"
-	class={cn(navigationMenuTriggerStyle(), "group", className)}
+	class={cn([navigationMenuTriggerStyle(), "group", className])}
 	{...restProps}
 >
 	{@render children?.()}
-	<ChevronDownIcon class="relative top-px ml-1 size-3 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-data-open/navigation-menu-trigger:rotate-180 group-data-popup-open/navigation-menu-trigger:rotate-180" aria-hidden="true" />
+	<ChevronDownIcon
+		class="relative top-px ml-1 size-3 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-data-open/navigation-menu-trigger:rotate-180 group-data-popup-open/navigation-menu-trigger:rotate-180"
+		aria-hidden="true"
+	/>
 </NavigationMenuPrimitive.Trigger>

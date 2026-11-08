@@ -11,6 +11,9 @@
 	}: SVGAttributes<SVGSVGElement> = $props();
 </script>
 
-<!-- `color`/`stroke` only when given: passing them as `undefined` overrode
-     lucide's `currentColor` and the spinner drew nothing. -->
-<Loader2Icon {role} aria-label={ariaLabel} class={cn("size-4 animate-spin", className)} {...restProps as Record<string, unknown>} />
+<Loader2Icon
+	{role}
+	aria-label={ariaLabel}
+	class={cn(["size-4 animate-spin", className])}
+	{...restProps as Record<string, unknown>}
+/>

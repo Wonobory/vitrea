@@ -21,8 +21,6 @@
 	{page.value}
 {/snippet}
 
-<!-- Every page is a ghost button; the current one sits on the glass indicator
-     that `pagination-content` slides between pages, so it has no glass of its own. -->
 <PaginationPrimitive.Page
 	bind:ref
 	{page}
@@ -36,11 +34,11 @@
 		<button
 			{...props}
 			use:press={!isActive}
-			class={cn(
+			class={cn([
 				buttonVariants({ size, variant: "ghost" }),
 				"relative z-10 tabular-nums text-muted-foreground hover:text-foreground aria-[current=page]:font-semibold aria-[current=page]:text-foreground aria-[current=page]:before:hidden aria-[current=page]:after:hidden",
-				className
-			)}
+				className,
+			])}
 		>
 			{#if children}
 				{@render children?.()}

@@ -33,23 +33,18 @@
 	} = $props();
 </script>
 
-<!-- One glass indicator slides to the active tab (`$lib/indicator`), instead of
-     each trigger painting its own background. In `line`, a 2px bar under it. -->
 <TabsPrimitive.List
 	bind:ref
 	data-slot="tabs-list"
 	data-variant={variant}
-	class={cn(tabsListVariants({ variant }), className)}
+	class={cn([tabsListVariants({ variant }), className])}
 	{...restProps}
 >
 	{#snippet child({ props })}
 		<div
 			{...props}
 			use:indicator={{
-				className:
-					variant === "line"
-						? "border-b-2 border-foreground"
-						: "glass-neutral rounded-md",
+				className: variant === "line" ? "border-b-2 border-foreground" : "glass-neutral rounded-md",
 			}}
 		>
 			{@render children?.()}

@@ -13,7 +13,7 @@
 <caption
 	bind:this={ref}
 	data-slot="table-caption"
-	class={cn("border-t px-4 py-3 text-left text-note text-muted-foreground", className)}
+	class={cn(["border-t px-4 py-3 text-left text-note text-muted-foreground", className])}
 	{...restProps}
 >
 	{@render children?.()}

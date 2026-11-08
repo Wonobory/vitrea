@@ -1,17 +1,11 @@
 <script lang="ts" module>
 	import { type VariantProps, tv } from "tailwind-variants";
 
-	/**
-	 * Each variant sets one `--tone`; border, the wash from the left, the icon
-	 * tile and the title all come from it. A panel, not glass: an alert is
-	 * something you read, not something you press.
-	 */
 	export const alertVariants = tv({
 		base: [
 			"group/alert relative grid w-full gap-0.5 overflow-hidden rounded-xl border px-4 py-3.5 text-left text-sm",
 			"border-[color-mix(in_oklab,var(--tone)_28%,var(--border))]",
 			"bg-[linear-gradient(90deg,color-mix(in_oklab,var(--tone)_9%,var(--panel)),var(--panel)_65%)]",
-			// The icon sits in a small tinted tile, spanning title and description.
 			"has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-3 *:[svg]:row-span-3 *:[svg]:size-8 *:[svg]:rounded-lg *:[svg]:p-[7px] *:[svg]:text-(--tone)",
 			"*:[svg]:bg-[color-mix(in_oklab,var(--tone)_12%,transparent)] *:[svg]:shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--tone)_18%,transparent)]",
 			"has-data-[slot=alert-close]:pr-11",
@@ -36,8 +30,7 @@
 <script lang="ts">
 	import type { HTMLAttributes } from "svelte/elements";
 	import { cn, type WithElementRef } from "$lib/utils.js";
-	import { slide } from "svelte/transition";
-	import { cubicOut } from "svelte/easing";
+	import { fold } from "$lib/transitions";
 	import XIcon from "@lucide/svelte/icons/x";
 	import { press } from "$lib/press";
 
@@ -53,20 +46,13 @@
 		/** Shows a close button. Remove the alert in it and it folds away. */
 		onclose?: () => void;
 	} = $props();
-
-	// In and out: the height folds (so what's below moves up smoothly, no jump)
-	// while it fades and settles from 98 %.
-	function fold(node: Element) {
-		const s = slide(node, { duration: 320, easing: cubicOut });
-		return { ...s, css: (t: number, u: number) => `${s.css?.(t, u) ?? ""}opacity:${t};scale:${0.98 + 0.02 * t};` };
-	}
 </script>
 
 <div
 	bind:this={ref}
 	data-slot="alert"
 	role={variant === "destructive" || variant === "warning" ? "alert" : "status"}
-	class={cn(alertVariants({ variant }), className)}
+	class={cn([alertVariants({ variant }), className])}
 	transition:fold
 	{...restProps}
 >

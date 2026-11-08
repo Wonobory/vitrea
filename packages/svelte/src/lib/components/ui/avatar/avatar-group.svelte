@@ -13,10 +13,10 @@
 <div
 	bind:this={ref}
 	data-slot="avatar-group"
-	class={cn(
+	class={cn([
 		"cn-avatar-group *:data-[slot=avatar]:ring-background group/avatar-group flex -space-x-2 *:data-[slot=avatar]:ring-2",
-		className
-	)}
+		className,
+	])}
 	{...restProps}
 >
 	{@render children?.()}

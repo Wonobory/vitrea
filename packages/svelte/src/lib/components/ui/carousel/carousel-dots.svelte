@@ -4,16 +4,19 @@
 	import { cn, type WithElementRef } from "$lib/utils.js";
 	import { indicator } from "$lib/indicator";
 
-	let { ref = $bindable(null), class: className, ...restProps }: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
+	let {
+		ref = $bindable(null),
+		class: className,
+		...restProps
+	}: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
 
 	const emblaCtx = getEmblaContext("<Carousel.Dots/>");
 </script>
 
-<!-- One glass pill slides to the current slide and stretches on the way (`$lib/indicator`). -->
 <div
 	bind:this={ref}
 	data-slot="carousel-dots"
-	class={cn("mt-4 flex items-center justify-center gap-1.5", className)}
+	class={cn(["mt-4 flex items-center justify-center gap-1.5", className])}
 	use:indicator={{ active: '[aria-current="true"]', className: "glass-fill rounded-full" }}
 	{...restProps}
 >

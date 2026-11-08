@@ -1,386 +1,399 @@
-/*
- * Vítrea core: design tokens, base styles and the `.glass-*` surfaces.
- * Framework-agnostic: the Svelte and React packages both build on it.
- *
- * Use it from a Tailwind CSS v4 stylesheet:
- *   @import "tailwindcss";
- *   @import "@vitreakit/core/styles.css";
- *
- * Fonts are not bundled: the tokens name Inter, Archivo (titles) and JetBrains
- * Mono and fall back to system fonts. Load them however you prefer.
- */
-
 @custom-variant dark (&:is(.dark *));
 
 @theme {
+	--font-sans: "Inter Variable", sans-serif;
+	--font-mono: "JetBrains Mono Variable", monospace;
+	--font-display: "Archivo Variable", "Archivo", ui-sans-serif, sans-serif;
 
-  --font-sans: "Inter Variable", sans-serif;
-  --font-mono: "JetBrains Mono Variable", monospace;
-  /* Titles only. Inter sets a product well but not a headline. */
-  --font-display: "Archivo Variable", "Archivo", ui-sans-serif, sans-serif;
+	--text-2xs: 0.6875rem;
+	--text-3xs: 0.625rem;
+	--text-note: 0.8125rem;
+	--text-note--line-height: 1.45;
 
-  /* Two steps below `text-xs`, for small-caps labels. In `rem` so they follow
-     the browser's font size (WCAG 1.4.4). */
-  --text-2xs: 0.6875rem;
-  --text-3xs: 0.625rem;
-  /* Notes and explanations: text to read, not a label. At 11 px they were
-     unreadable on a phone. */
-  --text-note: 0.8125rem;
-  --text-note--line-height: 1.45;
+	--color-success: var(--success);
+	--color-success-foreground: var(--success-foreground);
+	--color-warning: var(--warning);
+	--color-danger: var(--danger);
+	--color-sidebar-ring: var(--sidebar-ring);
+	--color-sidebar-border: var(--sidebar-border);
+	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+	--color-sidebar-accent: var(--sidebar-accent);
+	--color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+	--color-sidebar-primary: var(--sidebar-primary);
+	--color-sidebar-foreground: var(--sidebar-foreground);
+	--color-sidebar: var(--sidebar);
+	--color-chart-5: var(--chart-5);
+	--color-chart-4: var(--chart-4);
+	--color-chart-3: var(--chart-3);
+	--color-chart-2: var(--chart-2);
+	--color-chart-1: var(--chart-1);
+	--color-ring: var(--ring);
+	--color-input: var(--input);
+	--color-border: var(--border);
+	--color-destructive: var(--destructive);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-secondary: var(--secondary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-primary: var(--primary);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-popover: var(--popover);
+	--color-card-foreground: var(--card-foreground);
+	--color-card: var(--card);
+	--color-panel: var(--panel);
+	--color-foreground: var(--foreground);
+	--color-background: var(--background);
+	--radius-sm: calc(var(--radius) * 0.6);
+	--radius-md: calc(var(--radius) * 0.8);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) * 1.4);
+	--radius-2xl: calc(var(--radius) * 1.8);
+	--radius-3xl: calc(var(--radius) * 2.2);
+	--radius-4xl: calc(var(--radius) * 2.6);
 
-  /* Semantic states. Each value passes 4.5:1 against the background of its own
-     theme (raw Tailwind palette colours don't follow the theme). */
-  --color-success: var(--success);
-  --color-success-foreground: var(--success-foreground);
-  --color-warning: var(--warning);
-  --color-danger: var(--danger);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --color-panel: var(--panel);
-  --color-foreground: var(--foreground);
-  --color-background: var(--background);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+	--animate-backdrop-in: backdrop-in 280ms cubic-bezier(0.25, 1, 0.5, 1) both;
+	--animate-backdrop-out: backdrop-in 200ms linear reverse both;
 
-  /* Backdrop of bits-ui modals: blurs from 0 to 10 px, and fades out in
-     200 ms. The modal itself comes in with `fadeScale` (a spring transition). */
-  --animate-backdrop-in: backdrop-in 280ms cubic-bezier(0.25, 1, 0.5, 1) both;
-  --animate-backdrop-out: backdrop-in 200ms linear reverse both;
+	@keyframes backdrop-in {
+		from {
+			backdrop-filter: blur(0);
+			-webkit-backdrop-filter: blur(0);
+		}
+		to {
+			backdrop-filter: blur(10px);
+			-webkit-backdrop-filter: blur(10px);
+		}
+	}
 
-  @keyframes backdrop-in {
-    from {
-      backdrop-filter: blur(0);
-      -webkit-backdrop-filter: blur(0);
-    }
-    to {
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-  }
+	--animate-field-halo: field-halo 550ms var(--spring-small);
 
-  /* Focus of the fields (text fields): the ring opens wide and settles on the
-     spring, once. It ends on the same ring the utilities draw (3 px, ring at
-     20 %), so there's no jump when the animation lets go of the shadow. */
-  --animate-field-halo: field-halo 550ms var(--spring-small);
-
-  @keyframes field-halo {
-    from {
-      box-shadow: 0 0 0 10px color-mix(in oklab, var(--ring) 0%, transparent);
-    }
-    to {
-      box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 20%, transparent);
-    }
-  }
+	@keyframes field-halo {
+		from {
+			box-shadow: 0 0 0 10px color-mix(in oklab, var(--ring) 0%, transparent);
+		}
+		to {
+			box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 20%, transparent);
+		}
+	}
 }
 
 :root {
-  /* The springs of `$lib/springs` as CSS curves, for transitions that can't be Svelte tweens. */
-  --spring-small: linear(0, 0.009, 0.032, 0.068, 0.113, 0.166, 0.224, 0.286, 0.349, 0.413, 0.475, 0.537, 0.595, 0.651, 0.703, 0.751, 0.796, 0.836, 0.871, 0.903, 0.931, 0.954, 0.975, 0.991, 1.005, 1.016, 1.024, 1.03, 1.033, 1.035, 1.036, 1.035, 1.033, 1.03, 1.027, 1.023, 1.019, 1.014, 1.009, 1.005, 1);
-  --spring-xsmall: linear(0, 0.022, 0.079, 0.163, 0.262, 0.371, 0.482, 0.59, 0.691, 0.783, 0.864, 0.933, 0.99, 1.035, 1.069, 1.093, 1.108, 1.116, 1.117, 1.114, 1.107, 1.098, 1.086, 1.075, 1.063, 1.051, 1.04, 1.03, 1.022, 1.015, 1.009, 1.004, 1.001, 0.999, 0.997, 0.996, 0.996, 0.997, 0.998, 0.999, 1);
-  /* The accent's hue and a chroma factor (0 = graphite). Every accent token
-     below is built from them, so an accent picker
-     only needs to set these two. */
-  --accent-h: 273;
-  --accent-c: 1;
-  /* The brand accent is the blue #5B6BFF = oklch(0.6 0.218 273), never used
-     literally: in light it drops to L 0.57 so white text on it reaches 4.5:1
-     (the exact 0.6 gives 4.2), and in dark it rises to L 0.74 / C 0.15 to read
-     on the near-black background with dark text on it. Blue means "action",
-     green (`--success`) means "all good".
-
-     Neutrals carry a hint of chroma towards the brand blue (hue 273). At 0.004
-     it doesn't read as "a blue grey", but ties the accent to the surfaces. */
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0.004 273);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0.004 273);
-  /* Surface of static containers. In light `--card` is the same white as the
-     background; one step of lightness shows where each block starts and ends. */
-  --panel: oklch(0.982 0.003 273);
-  /* The most chroma sRGB fits at the lightness that gives 4.5:1 on `--panel`. */
-  --success: oklch(0.52 0.15 148);
-  --success-foreground: oklch(0.985 0.01 165);
-  /* A vivid orange: darkening an orange without chroma turns it brown. */
-  --warning: oklch(0.58 0.19 42);
-  --danger: oklch(0.55 0.22 27);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.57 calc(0.21 * var(--accent-c)) var(--accent-h));
-  --primary-foreground: oklch(0.985 calc(0.01 * var(--accent-c)) var(--accent-h));
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.57 calc(0.21 * var(--accent-c)) var(--accent-h));
-  --chart-1: oklch(0.57 calc(0.21 * var(--accent-c)) var(--accent-h));
-  --chart-2: oklch(0.68 0.17 150);
-  --chart-3: oklch(0.77 0.17 62);
-  --chart-4: oklch(0.67 0.2 28);
-  --chart-5: oklch(0.556 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.57 calc(0.21 * var(--accent-c)) var(--accent-h));
-  --sidebar-primary-foreground: oklch(0.985 calc(0.01 * var(--accent-c)) var(--accent-h));
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.57 calc(0.21 * var(--accent-c)) var(--accent-h));
+	--spring-small: linear(
+		0,
+		0.009,
+		0.032,
+		0.068,
+		0.113,
+		0.166,
+		0.224,
+		0.286,
+		0.349,
+		0.413,
+		0.475,
+		0.537,
+		0.595,
+		0.651,
+		0.703,
+		0.751,
+		0.796,
+		0.836,
+		0.871,
+		0.903,
+		0.931,
+		0.954,
+		0.975,
+		0.991,
+		1.005,
+		1.016,
+		1.024,
+		1.03,
+		1.033,
+		1.035,
+		1.036,
+		1.035,
+		1.033,
+		1.03,
+		1.027,
+		1.023,
+		1.019,
+		1.014,
+		1.009,
+		1.005,
+		1
+	);
+	--spring-xsmall: linear(
+		0,
+		0.022,
+		0.079,
+		0.163,
+		0.262,
+		0.371,
+		0.482,
+		0.59,
+		0.691,
+		0.783,
+		0.864,
+		0.933,
+		0.99,
+		1.035,
+		1.069,
+		1.093,
+		1.108,
+		1.116,
+		1.117,
+		1.114,
+		1.107,
+		1.098,
+		1.086,
+		1.075,
+		1.063,
+		1.051,
+		1.04,
+		1.03,
+		1.022,
+		1.015,
+		1.009,
+		1.004,
+		1.001,
+		0.999,
+		0.997,
+		0.996,
+		0.996,
+		0.997,
+		0.998,
+		0.999,
+		1
+	);
+	--accent-h: 273;
+	--accent-c: 1;
+	--background: oklch(1 0 0);
+	--foreground: oklch(0.145 0.004 273);
+	--card: oklch(1 0 0);
+	--card-foreground: oklch(0.145 0.004 273);
+	--panel: oklch(0.982 0.003 273);
+	--success: oklch(0.52 0.15 148);
+	--success-foreground: oklch(0.985 0.01 165);
+	--warning: oklch(0.58 0.19 42);
+	--danger: oklch(0.55 0.22 27);
+	--popover: oklch(1 0 0);
+	--popover-foreground: oklch(0.145 0 0);
+	--primary: oklch(0.57 calc(0.21 * var(--accent-c)) var(--accent-h));
+	--primary-foreground: oklch(0.985 calc(0.01 * var(--accent-c)) var(--accent-h));
+	--secondary: oklch(0.97 0 0);
+	--secondary-foreground: oklch(0.205 0 0);
+	--muted: oklch(0.97 0 0);
+	--muted-foreground: oklch(0.556 0 0);
+	--accent: oklch(0.97 0 0);
+	--accent-foreground: oklch(0.205 0 0);
+	--destructive: oklch(0.577 0.245 27.325);
+	--border: oklch(0.922 0 0);
+	--input: oklch(0.922 0 0);
+	--ring: oklch(0.57 calc(0.21 * var(--accent-c)) var(--accent-h));
+	--chart-1: oklch(0.57 calc(0.21 * var(--accent-c)) var(--accent-h));
+	--chart-2: oklch(0.68 0.17 150);
+	--chart-3: oklch(0.77 0.17 62);
+	--chart-4: oklch(0.67 0.2 28);
+	--chart-5: oklch(0.556 0 0);
+	--radius: 0.625rem;
+	--sidebar: oklch(0.985 0 0);
+	--sidebar-foreground: oklch(0.145 0 0);
+	--sidebar-primary: oklch(0.57 calc(0.21 * var(--accent-c)) var(--accent-h));
+	--sidebar-primary-foreground: oklch(0.985 calc(0.01 * var(--accent-c)) var(--accent-h));
+	--sidebar-accent: oklch(0.97 0 0);
+	--sidebar-accent-foreground: oklch(0.205 0 0);
+	--sidebar-border: oklch(0.922 0 0);
+	--sidebar-ring: oklch(0.57 calc(0.21 * var(--accent-c)) var(--accent-h));
 }
 
 .dark {
-  /* #020406: near black with a drop of cold blue (hue 241, not the brand's
-     273: at chroma 0.01 the hue difference doesn't show). */
-  --background: oklch(0.104 0.01 241);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0.005 273);
-  --card-foreground: oklch(0.985 0 0);
-  --panel: var(--card);
-  --success: oklch(0.74 0.11 152);
-  --success-foreground: oklch(0.2 0.04 165);
-  --warning: oklch(0.82 0.14 85);
-  --danger: oklch(0.7 0.19 22);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.74 calc(0.15 * var(--accent-c)) var(--accent-h));
-  --primary-foreground: oklch(0.2 calc(0.04 * var(--accent-c)) var(--accent-h));
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.74 calc(0.15 * var(--accent-c)) var(--accent-h));
-  --chart-1: oklch(0.74 calc(0.15 * var(--accent-c)) var(--accent-h));
-  --chart-2: oklch(0.74 0.11 152);
-  --chart-3: oklch(0.82 0.14 85);
-  --chart-4: oklch(0.7 0.19 22);
-  --chart-5: oklch(0.708 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.74 calc(0.15 * var(--accent-c)) var(--accent-h));
-  --sidebar-primary-foreground: oklch(0.2 calc(0.04 * var(--accent-c)) var(--accent-h));
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.74 calc(0.15 * var(--accent-c)) var(--accent-h));
+	--background: oklch(0.104 0.01 241);
+	--foreground: oklch(0.985 0 0);
+	--card: oklch(0.205 0.005 273);
+	--card-foreground: oklch(0.985 0 0);
+	--panel: var(--card);
+	--success: oklch(0.74 0.11 152);
+	--success-foreground: oklch(0.2 0.04 165);
+	--warning: oklch(0.82 0.14 85);
+	--danger: oklch(0.7 0.19 22);
+	--popover: oklch(0.205 0 0);
+	--popover-foreground: oklch(0.985 0 0);
+	--primary: oklch(0.74 calc(0.15 * var(--accent-c)) var(--accent-h));
+	--primary-foreground: oklch(0.2 calc(0.04 * var(--accent-c)) var(--accent-h));
+	--secondary: oklch(0.269 0 0);
+	--secondary-foreground: oklch(0.985 0 0);
+	--muted: oklch(0.269 0 0);
+	--muted-foreground: oklch(0.708 0 0);
+	--accent: oklch(0.269 0 0);
+	--accent-foreground: oklch(0.985 0 0);
+	--destructive: oklch(0.704 0.191 22.216);
+	--border: oklch(1 0 0 / 10%);
+	--input: oklch(1 0 0 / 15%);
+	--ring: oklch(0.74 calc(0.15 * var(--accent-c)) var(--accent-h));
+	--chart-1: oklch(0.74 calc(0.15 * var(--accent-c)) var(--accent-h));
+	--chart-2: oklch(0.74 0.11 152);
+	--chart-3: oklch(0.82 0.14 85);
+	--chart-4: oklch(0.7 0.19 22);
+	--chart-5: oklch(0.708 0 0);
+	--sidebar: oklch(0.205 0 0);
+	--sidebar-foreground: oklch(0.985 0 0);
+	--sidebar-primary: oklch(0.74 calc(0.15 * var(--accent-c)) var(--accent-h));
+	--sidebar-primary-foreground: oklch(0.2 calc(0.04 * var(--accent-c)) var(--accent-h));
+	--sidebar-accent: oklch(0.269 0 0);
+	--sidebar-accent-foreground: oklch(0.985 0 0);
+	--sidebar-border: oklch(1 0 0 / 10%);
+	--sidebar-ring: oklch(0.74 calc(0.15 * var(--accent-c)) var(--accent-h));
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-  html {
-    @apply font-sans;
-  }
+	* {
+		@apply border-border outline-ring/50;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
+	html {
+		@apply font-sans;
+	}
 
-  button {
-    cursor: pointer;
-  }
+	button {
+		cursor: pointer;
+	}
 
-  /* A visible focus for keyboard navigation (active states are colour only). */
-  :focus-visible {
-    outline: 2px solid var(--ring);
-    outline-offset: 2px;
-  }
-
+	:focus-visible {
+		outline: 2px solid var(--ring);
+		outline-offset: 2px;
+	}
 }
 
-/* No animation here carries information on its own: with reduced motion they
-   can all be switched off. */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
 }
 
-/* Thin native scrollbars in theme colours. In `base` so utilities like
-   `no-scrollbar` win. */
 @layer base {
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: color-mix(in oklch, var(--muted-foreground) 45%, transparent) transparent;
-  }
+	* {
+		scrollbar-width: thin;
+		scrollbar-color: color-mix(in oklch, var(--muted-foreground) 45%, transparent) transparent;
+	}
 }
 
-/* Glass controls: the look of the segmented control's lens (`Lens`), in CSS.
-   Over a flat panel the lens has nothing to refract and only added the rim and
-   the shine, at the cost of an SVG filter per button. They go with a `press`
-   action, which scales them on press/hover and shows the
-   ghost (`--glass-show`).
-   - fill: the primary. A light gradient and the colour at 88 %.
-   - neutral: the outline. A veil over the card.
-   - ghost: nothing at rest; the neutral appears on hover, press or focus.
-   - panel: the neutral for something that opens (popover, menu, dialog):
-     without the filter or the hover change, which are for buttons. */
 @layer components {
-  .glass-fill,
-  .glass-neutral,
-  .glass-ghost,
-  .glass-panel {
-    position: relative;
-    isolation: isolate;
-    border-color: transparent;
-    /* An SVG filter that does nothing (`#glass-null`: render the framework's `GlassFilters` once in the root layout). Safari
-       draws the text of a scaled element ~1 px lower than unscaled (with any
-       scale ≠ 1, even 1.01), so it jumped on press or hover. With a filter it
-       rasterises the button unscaled and scales the image. CSS filters
-       (opacity(1), blur(0)) don't work: it has to be SVG. */
-    filter: url(#glass-null);
-    --glass-edge: rgb(255 255 255 / 0.55);
-    --glass-veil: rgb(0 0 0 / 0.04);
-    --glass-veil-over: rgb(0 0 0 / 0.02);
-    --glass-rim:
-      inset 0 1px 0 rgb(255 255 255 / 0.7), inset 0 0 0 1px rgb(0 0 0 / 0.06), 0 1px 3px rgb(0 0 0 / 0.12),
-      0 4px 10px -4px rgb(0 0 0 / 0.18);
-  }
-  .dark :is(.glass-fill, .glass-neutral, .glass-ghost, .glass-panel) {
-    --glass-edge: rgb(255 255 255 / 0.28);
-    --glass-veil: rgb(255 255 255 / 0.06);
-    --glass-veil-over: rgb(255 255 255 / 0.1);
-    --glass-rim:
-      inset 0 1px 0 rgb(255 255 255 / 0.18), inset 0 0 0 1px rgb(255 255 255 / 0.08), 0 1px 3px rgb(0 0 0 / 0.4),
-      0 4px 10px -4px rgb(0 0 0 / 0.5);
-  }
+	.glass-fill,
+	.glass-neutral,
+	.glass-ghost,
+	.glass-panel {
+		position: relative;
+		isolation: isolate;
+		border-color: transparent;
+		filter: url(#glass-null);
+		--glass-edge: rgb(255 255 255 / 0.55);
+		--glass-veil: rgb(0 0 0 / 0.04);
+		--glass-veil-over: rgb(0 0 0 / 0.02);
+		--glass-rim:
+			inset 0 1px 0 rgb(255 255 255 / 0.7), inset 0 0 0 1px rgb(0 0 0 / 0.06),
+			0 1px 3px rgb(0 0 0 / 0.12), 0 4px 10px -4px rgb(0 0 0 / 0.18);
+	}
+	.dark :is(.glass-fill, .glass-neutral, .glass-ghost, .glass-panel) {
+		--glass-edge: rgb(255 255 255 / 0.28);
+		--glass-veil: rgb(255 255 255 / 0.06);
+		--glass-veil-over: rgb(255 255 255 / 0.1);
+		--glass-rim:
+			inset 0 1px 0 rgb(255 255 255 / 0.18), inset 0 0 0 1px rgb(255 255 255 / 0.08),
+			0 1px 3px rgb(0 0 0 / 0.4), 0 4px 10px -4px rgb(0 0 0 / 0.5);
+	}
 
-  /* The lens's specular shine: a 1 px edge that lights up at the top-left and
-     bottom-right corners. */
-  :is(.glass-fill, .glass-neutral, .glass-ghost, .glass-panel)::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    pointer-events: none;
-    background: linear-gradient(135deg, var(--glass-edge), transparent 28% 72%, var(--glass-edge));
-    mask:
-      linear-gradient(#000 0 0) content-box exclude,
-      linear-gradient(#000 0 0);
-  }
+	:is(.glass-fill, .glass-neutral, .glass-ghost, .glass-panel)::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		padding: 1px;
+		pointer-events: none;
+		background: linear-gradient(135deg, var(--glass-edge), transparent 28% 72%, var(--glass-edge));
+		mask:
+			linear-gradient(#000 0 0) content-box exclude,
+			linear-gradient(#000 0 0);
+	}
 
-  .glass-neutral,
-  .glass-panel {
-    color: var(--foreground);
-    background: linear-gradient(var(--glass-veil), var(--glass-veil)), var(--card);
-    box-shadow: var(--glass-rim);
-  }
-  .glass-panel {
-    filter: none;
-  }
-  .glass-neutral:hover {
-    background: linear-gradient(var(--glass-veil-over), var(--glass-veil-over)), var(--card);
-  }
-  /* Toggles that are on (Follow): a deeper veil. */
-  .glass-neutral[aria-pressed="true"] {
-    --glass-veil: rgb(0 0 0 / 0.09);
-    --glass-veil-over: rgb(0 0 0 / 0.07);
-  }
-  .dark .glass-neutral[aria-pressed="true"] {
-    --glass-veil: rgb(255 255 255 / 0.14);
-    --glass-veil-over: rgb(255 255 255 / 0.18);
-  }
+	.glass-neutral,
+	.glass-panel {
+		color: var(--foreground);
+		background: linear-gradient(var(--glass-veil), var(--glass-veil)), var(--card);
+		box-shadow: var(--glass-rim);
+	}
+	.glass-panel {
+		filter: none;
+	}
+	.glass-neutral:hover {
+		background: linear-gradient(var(--glass-veil-over), var(--glass-veil-over)), var(--card);
+	}
+	.glass-neutral[aria-pressed="true"] {
+		--glass-veil: rgb(0 0 0 / 0.09);
+		--glass-veil-over: rgb(0 0 0 / 0.07);
+	}
+	.dark .glass-neutral[aria-pressed="true"] {
+		--glass-veil: rgb(255 255 255 / 0.14);
+		--glass-veil-over: rgb(255 255 255 / 0.18);
+	}
 
-  /* Ghost: the neutral lives in `::after`, behind the text, and shows with `--glass-show`. */
-  .glass-ghost {
-    background: transparent;
-  }
-  .glass-ghost::before {
-    opacity: var(--glass-show, 0);
-  }
-  /* With its menu open, the ghost keeps the glass. */
-  .glass-ghost[aria-expanded="true"]::before,
-  .glass-ghost[aria-expanded="true"]::after {
-    opacity: 1;
-  }
-  .glass-ghost::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-    pointer-events: none;
-    background: linear-gradient(var(--glass-veil), var(--glass-veil)), var(--card);
-    box-shadow: var(--glass-rim);
-    opacity: var(--glass-show, 0);
-  }
+	.glass-ghost {
+		background: transparent;
+	}
+	.glass-ghost::before {
+		opacity: var(--glass-show, 0);
+	}
+	.glass-ghost[aria-expanded="true"]::before,
+	.glass-ghost[aria-expanded="true"]::after {
+		opacity: 1;
+	}
+	.glass-ghost::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		border-radius: inherit;
+		pointer-events: none;
+		background: linear-gradient(var(--glass-veil), var(--glass-veil)), var(--card);
+		box-shadow: var(--glass-rim);
+		opacity: var(--glass-show, 0);
+	}
 
-  /* Fill. In dark, a deeper blue than `--primary` (light lavender with dark
-     text): as glass it was a pastel slab. */
-  .glass-fill {
-    --tone: var(--primary);
-    color: white;
-    background: linear-gradient(
-      180deg,
-      color-mix(in oklch, color-mix(in oklch, var(--tone) 82%, white) 88%, transparent) 0%,
-      color-mix(in oklch, var(--tone) 88%, transparent) 50%,
-      color-mix(in oklch, color-mix(in oklch, var(--tone) 82%, black) 88%, transparent) 100%
-    );
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.4),
-      inset 0 -1px 0 rgb(0 0 0 / 0.18),
-      inset 0 0 0 1px rgb(0 0 0 / 0.12),
-      0 1px 2px rgb(0 0 0 / 0.25),
-      0 3px 8px -3px color-mix(in oklch, var(--tone) 45%, transparent);
-  }
-  .dark .glass-fill {
-    --tone: oklch(0.55 calc(0.19 * var(--accent-c)) var(--accent-h));
-  }
-  .glass-fill:hover {
-    background:
-      linear-gradient(rgb(255 255 255 / 0.06), rgb(255 255 255 / 0.06)),
-      linear-gradient(
-        180deg,
-        color-mix(in oklch, color-mix(in oklch, var(--tone) 82%, white) 88%, transparent) 0%,
-        color-mix(in oklch, var(--tone) 88%, transparent) 50%,
-        color-mix(in oklch, color-mix(in oklch, var(--tone) 82%, black) 88%, transparent) 100%
-      );
-  }
+	.glass-fill {
+		--tone: var(--primary);
+		color: white;
+		background: linear-gradient(
+			180deg,
+			color-mix(in oklch, color-mix(in oklch, var(--tone) 82%, white) 88%, transparent) 0%,
+			color-mix(in oklch, var(--tone) 88%, transparent) 50%,
+			color-mix(in oklch, color-mix(in oklch, var(--tone) 82%, black) 88%, transparent) 100%
+		);
+		box-shadow:
+			inset 0 1px 0 rgb(255 255 255 / 0.4),
+			inset 0 -1px 0 rgb(0 0 0 / 0.18),
+			inset 0 0 0 1px rgb(0 0 0 / 0.12),
+			0 1px 2px rgb(0 0 0 / 0.25),
+			0 3px 8px -3px color-mix(in oklch, var(--tone) 45%, transparent);
+	}
+	.dark .glass-fill {
+		--tone: oklch(0.55 calc(0.19 * var(--accent-c)) var(--accent-h));
+	}
+	.glass-fill:hover {
+		background:
+			linear-gradient(rgb(255 255 255 / 0.06), rgb(255 255 255 / 0.06)),
+			linear-gradient(
+				180deg,
+				color-mix(in oklch, color-mix(in oklch, var(--tone) 82%, white) 88%, transparent) 0%,
+				color-mix(in oklch, var(--tone) 88%, transparent) 50%,
+				color-mix(in oklch, color-mix(in oklch, var(--tone) 82%, black) 88%, transparent) 100%
+			);
+	}
 }

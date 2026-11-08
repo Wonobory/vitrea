@@ -15,10 +15,10 @@
 <ResizablePrimitive.PaneResizer
 	bind:ref
 	data-slot="resizable-handle"
-	class={cn(
+	class={cn([
 		"cn-resizable-handle bg-border relative flex w-px transition-colors hover:bg-primary/60 data-[active]:bg-primary items-center justify-center after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2 data-[direction=vertical]:h-px data-[direction=vertical]:w-full data-[direction=vertical]:after:left-0 data-[direction=vertical]:after:h-1 data-[direction=vertical]:after:w-full data-[direction=vertical]:after:translate-x-0 data-[direction=vertical]:after:-translate-y-1/2 [&[data-direction=vertical]>div]:rotate-90",
-		className
-	)}
+		className,
+	])}
 	{...restProps}
 >
 	{#if withHandle}

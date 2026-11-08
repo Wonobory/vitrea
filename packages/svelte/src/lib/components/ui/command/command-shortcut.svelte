@@ -10,11 +10,13 @@
 	}: WithElementRef<HTMLAttributes<HTMLSpanElement>> = $props();
 </script>
 
-<!-- Looks like a `Kbd`: a key, not loose text. -->
 <span
 	bind:this={ref}
 	data-slot="command-shortcut"
-	class={cn("glass-neutral ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-md px-1.5 font-sans text-2xs font-medium text-muted-foreground group-data-selected/command-item:text-foreground", className)}
+	class={cn([
+		"glass-neutral ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-md px-1.5 font-sans text-2xs font-medium text-muted-foreground group-data-selected/command-item:text-foreground",
+		className,
+	])}
 	{...restProps}
 >
 	{@render children?.()}

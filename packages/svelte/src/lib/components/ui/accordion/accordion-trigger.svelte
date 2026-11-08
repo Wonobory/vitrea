@@ -18,10 +18,10 @@
 	<AccordionPrimitive.Trigger
 		data-slot="accordion-trigger"
 		bind:ref
-		class={cn(
+		class={cn([
 			"group/accordion-trigger relative flex flex-1 items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium transition-colors outline-none hover:text-foreground/80 disabled:pointer-events-none disabled:opacity-50",
-			className
-		)}
+			className,
+		])}
 		{...restProps}
 	>
 		{@render children?.()}

@@ -11,8 +11,6 @@
 
 	import { onMount } from "svelte";
 
-	// The clickable row under the pointer, for the sliding highlight of
-	// `table.svelte`. `:hover` alone can't be observed; an attribute can.
 	let current: HTMLElement | null = null;
 	const mark = (row: HTMLElement | null) => {
 		if (row === current) return;
@@ -21,8 +19,6 @@
 		current = row;
 	};
 
-	// Reordered rows (sorting) glide to their new place instead of jumping:
-	// FLIP on the DOM moves of a keyed `#each`, with the `springSmall` curve.
 	onMount(() => {
 		const body = ref!;
 		const reduced = matchMedia("(prefers-reduced-motion: reduce)");
@@ -30,10 +26,16 @@
 		let before = new Map(rows().map((r) => [r, r.offsetTop]));
 		const measure = () => (before = new Map(rows().map((r) => [r, r.offsetTop])));
 		const mo = new MutationObserver(() => {
-			const curve = getComputedStyle(document.documentElement).getPropertyValue("--spring-small").trim() || "ease-out";
+			const curve =
+				getComputedStyle(document.documentElement).getPropertyValue("--spring-small").trim() ||
+				"ease-out";
 			for (const r of rows()) {
 				const d = (before.get(r) ?? r.offsetTop) - r.offsetTop;
-				if (d && !reduced.matches) r.animate([{ translate: `0 ${d}px` }, { translate: "0 0" }], { duration: 500, easing: curve });
+				if (d && !reduced.matches)
+					r.animate([{ translate: `0 ${d}px` }, { translate: "0 0" }], {
+						duration: 500,
+						easing: curve,
+					});
 			}
 			measure();
 		});
@@ -47,8 +49,9 @@
 <tbody
 	bind:this={ref}
 	data-slot="table-body"
-	class={cn("[&_tr:last-child]:border-0", className)}
-	onpointerover={(e) => e.pointerType !== "touch" && mark((e.target as HTMLElement).closest("tr[data-clickable]"))}
+	class={cn(["[&_tr:last-child]:border-0", className])}
+	onpointerover={(e) =>
+		e.pointerType !== "touch" && mark((e.target as HTMLElement).closest("tr[data-clickable]"))}
 	onpointerleave={() => mark(null)}
 	{...restProps}
 >

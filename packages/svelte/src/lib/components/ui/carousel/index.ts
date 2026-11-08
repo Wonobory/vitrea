@@ -12,7 +12,6 @@ export {
 	Previous,
 	Next,
 	Dots,
-	//
 	Root as Carousel,
 	Content as CarouselContent,
 	Item as CarouselItem,

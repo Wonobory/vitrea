@@ -11,9 +11,9 @@
 
 <RangeCalendarPrimitive.HeadCell
 	bind:ref
-	class={cn(
+	class={cn([
 		"w-(--cell-size) text-2xs font-semibold tracking-wider text-muted-foreground uppercase",
-		className
-	)}
+		className,
+	])}
 	{...restProps}
 />

@@ -12,6 +12,6 @@
 <NavigationMenuPrimitive.Item
 	bind:ref
 	data-slot="navigation-menu-item"
-	class={cn("group-data-[viewport=false]/navigation-menu:relative", className)}
+	class={cn(["group-data-[viewport=false]/navigation-menu:relative", className])}
 	{...restProps}
 />

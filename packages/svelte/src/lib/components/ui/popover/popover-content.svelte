@@ -19,18 +19,24 @@
 	} = $props();
 </script>
 
-<!-- Glass sheet (`glass-panel`) that grows from its trigger with the modal spring. -->
 <PopoverPortal {...portalProps}>
-	<PopoverPrimitive.Content bind:ref forceMount data-slot="popover-content" {sideOffset} {align} {...restProps}>
+	<PopoverPrimitive.Content
+		bind:ref
+		forceMount
+		data-slot="popover-content"
+		{sideOffset}
+		{align}
+		{...restProps}
+	>
 		{#snippet child({ wrapperProps, props, open })}
 			{#if open}
 				<div {...wrapperProps}>
 					<div
 						{...props}
-						class={cn(
+						class={cn([
 							"glass-panel z-50 flex w-72 origin-(--bits-floating-transform-origin) flex-col gap-4 rounded-xl p-4 text-sm text-popover-foreground outline-hidden",
-							className
-						)}
+							className,
+						])}
 						in:fadeScale={floatingIn}
 						out:fade={{ duration: FLOATING_OUT }}
 					>

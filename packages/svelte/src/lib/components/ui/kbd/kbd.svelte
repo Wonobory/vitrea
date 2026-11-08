@@ -13,10 +13,10 @@
 <kbd
 	bind:this={ref}
 	data-slot="kbd"
-	class={cn(
+	class={cn([
 		"glass-neutral h-5 w-fit min-w-5 gap-1 rounded-md px-1.5 font-sans text-2xs font-medium text-muted-foreground [&_svg:not([class*='size-'])]:size-3 pointer-events-none inline-flex items-center justify-center select-none",
-		className
-	)}
+		className,
+	])}
 	{...restProps}
 >
 	{@render children?.()}

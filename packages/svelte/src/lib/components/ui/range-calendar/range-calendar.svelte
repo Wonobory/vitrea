@@ -33,9 +33,9 @@
 		day?: Snippet<[{ day: DateValue; outsideMonth: boolean }]>;
 	} = $props();
 
-	/** Days of the range, or of the one being picked (bits highlights them as the pointer moves). */
 	const inRange = (el: HTMLElement) =>
-		!el.hasAttribute("data-outside-month") && (el.hasAttribute("data-selected") || el.hasAttribute("data-highlighted"));
+		!el.hasAttribute("data-outside-month") &&
+		(el.hasAttribute("data-selected") || el.hasAttribute("data-highlighted"));
 
 	const monthFormat = $derived.by(() => {
 		if (monthFormatProp) return monthFormatProp;
@@ -50,10 +50,10 @@
 	bind:placeholder
 	{weekdayFormat}
 	{disableDaysOutsideMonth}
-	class={cn(
+	class={cn([
 		"p-3 [--cell-radius:var(--radius-md)] [--cell-size:--spacing(9)] bg-panel group/calendar p-3 [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent",
-		className
-	)}
+		className,
+	])}
 	{locale}
 	{monthFormat}
 	{yearFormat}
@@ -81,8 +81,6 @@
 						/>
 					</RangeCalendar.Header>
 
-					<!-- The range is one tinted piece of glass per week, fused under the days;
-					     while you pick the end it stretches to the day under the pointer. -->
 					<div
 						use:fuse={{
 							items: "[data-bits-day]",
@@ -93,35 +91,35 @@
 								"glass-neutral rounded-(--cell-radius) [--glass-veil:color-mix(in_oklab,var(--primary)_14%,transparent)]",
 						}}
 					>
-					<RangeCalendar.Grid>
-						<RangeCalendar.GridHead>
-							<RangeCalendar.GridRow class="select-none">
-								{#each weekdays as weekday, i (i)}
-									<RangeCalendar.HeadCell>
-										{weekday.slice(0, 2)}
-									</RangeCalendar.HeadCell>
-								{/each}
-							</RangeCalendar.GridRow>
-						</RangeCalendar.GridHead>
-						<RangeCalendar.GridBody>
-							{#each month.weeks as weekDates (weekDates)}
-								<RangeCalendar.GridRow class="mt-2 w-full">
-									{#each weekDates as date (date)}
-										<RangeCalendar.Cell {date} month={month.value}>
-											{#if day}
-												{@render day({
-													day: date,
-													outsideMonth: !isEqualMonth(date, month.value),
-												})}
-											{:else}
-												<RangeCalendar.Day />
-											{/if}
-										</RangeCalendar.Cell>
+						<RangeCalendar.Grid>
+							<RangeCalendar.GridHead>
+								<RangeCalendar.GridRow class="select-none">
+									{#each weekdays as weekday, i (i)}
+										<RangeCalendar.HeadCell>
+											{weekday.slice(0, 2)}
+										</RangeCalendar.HeadCell>
 									{/each}
 								</RangeCalendar.GridRow>
-							{/each}
-						</RangeCalendar.GridBody>
-					</RangeCalendar.Grid>
+							</RangeCalendar.GridHead>
+							<RangeCalendar.GridBody>
+								{#each month.weeks as weekDates (weekDates)}
+									<RangeCalendar.GridRow class="mt-2 w-full">
+										{#each weekDates as date (date)}
+											<RangeCalendar.Cell {date} month={month.value}>
+												{#if day}
+													{@render day({
+														day: date,
+														outsideMonth: !isEqualMonth(date, month.value),
+													})}
+												{:else}
+													<RangeCalendar.Day />
+												{/if}
+											</RangeCalendar.Cell>
+										{/each}
+									</RangeCalendar.GridRow>
+								{/each}
+							</RangeCalendar.GridBody>
+						</RangeCalendar.Grid>
 					</div>
 				</RangeCalendar.Month>
 			{/each}

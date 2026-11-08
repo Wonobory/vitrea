@@ -1,10 +1,10 @@
 node_modules
 .svelte-kit
-/build
-/dist
-/package
+build
+dist
 .DS_Store
 .env
 .env.*
 !.env.example
 .vercel
+vite.config.*.timestamp-*

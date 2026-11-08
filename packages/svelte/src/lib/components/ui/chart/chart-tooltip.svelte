@@ -6,9 +6,9 @@
 	import type { Snippet } from "svelte";
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	function defaultFormatter(value: any, _payload: TooltipPayload[]) {
+	const defaultFormatter = (value: any, _payload: TooltipPayload[]) => {
 		return `${value}`;
-	}
+	};
 
 	let {
 		ref = $bindable(null),
@@ -32,7 +32,8 @@
 		labelKey?: string;
 		hideIndicator?: boolean;
 		labelClassName?: string;
-		labelFormatter?: // eslint-disable-next-line @typescript-eslint/no-explicit-any
+		labelFormatter?:
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			((value: any, payload: TooltipPayload[]) => string | number | Snippet) | null;
 		formatter?: Snippet<
 			[
@@ -50,8 +51,6 @@
 	const chart = useChart();
 	const chartCtx = getChartContext();
 
-	// Filter to series with defined values (important for item-based charts like Pie/Arc
-	// where only the hovered item has a value)
 	const visibleSeries = $derived(
 		chartCtx.tooltip.series.filter((s: TooltipPayload) => s.value !== undefined)
 	);
@@ -62,7 +61,6 @@
 		const [item] = visibleSeries;
 		const tooltipData = chartCtx.tooltip.data;
 
-		// Get the x-axis label value from the raw tooltip data (e.g. a Date or month string)
 		const dataLabel = tooltipData != null ? chartCtx.x(tooltipData) : undefined;
 
 		const key = labelKey ?? item?.label ?? item?.key ?? "value";
@@ -92,7 +90,7 @@
 
 {#snippet TooltipLabel()}
 	{#if formattedLabel}
-		<div class={cn("font-medium", labelClassName)}>
+		<div class={cn(["font-medium", labelClassName])}>
 			{#if typeof formattedLabel === "function"}
 				{@render formattedLabel()}
 			{:else}
@@ -102,14 +100,13 @@
 	{/if}
 {/snippet}
 
-<!-- Snapped to the hovered datum, above it: following the pointer it jittered. -->
 <TooltipPrimitive.Root variant="none" x="data" y="data" anchor="bottom" yOffset={-8}>
 	<div
 		bind:this={ref}
-		class={cn(
+		class={cn([
 			"glass-panel grid min-w-[9rem] items-start gap-1.5 rounded-lg px-2.5 py-2 text-xs",
-			className
-		)}
+			className,
+		])}
 		{...restProps}
 	>
 		{#if !nestLabel}
@@ -126,10 +123,10 @@
 				)}
 				{@const indicatorColor = color || item.config?.color || item.color}
 				<div
-					class={cn(
+					class={cn([
 						"[&>svg]:text-muted-foreground flex w-full flex-wrap items-stretch gap-2 [&>svg]:size-2.5",
-						indicator === "dot" && "items-center"
-					)}
+						indicator === "dot" && "items-center",
+					])}
 				>
 					{#if formatter && item.value !== undefined && item.label}
 						{@render formatter({
@@ -145,23 +142,22 @@
 						{:else if !hideIndicator}
 							<div
 								style="--color-bg: {indicatorColor}; --color-border: {indicatorColor};"
-								class={cn(
+								class={cn([
 									"shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)",
 									{
 										"size-2.5": indicator === "dot",
 										"h-full w-1": indicator === "line",
-										"w-0 border-[1.5px] border-dashed bg-transparent":
-											indicator === "dashed",
+										"w-0 border-[1.5px] border-dashed bg-transparent": indicator === "dashed",
 										"my-0.5": nestLabel && indicator === "dashed",
-									}
-								)}
+									},
+								])}
 							></div>
 						{/if}
 						<div
-							class={cn(
+							class={cn([
 								"flex flex-1 shrink-0 justify-between leading-none",
-								nestLabel ? "items-end" : "items-center"
-							)}
+								nestLabel ? "items-end" : "items-center",
+							])}
 						>
 							<div class="grid gap-1.5">
 								{#if nestLabel}

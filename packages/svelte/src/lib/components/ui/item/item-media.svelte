@@ -7,7 +7,8 @@
 			variant: {
 				default: "bg-transparent",
 				icon: "size-9 rounded-md border bg-card text-muted-foreground group-data-[size=sm]/item:size-8 [&_svg:not([class*='size-'])]:size-4",
-				image: "size-10 overflow-hidden rounded-md group-data-[size=sm]/item:size-8 group-data-[size=xs]/item:size-6 [&_img]:size-full [&_img]:object-cover",
+				image:
+					"size-10 overflow-hidden rounded-md group-data-[size=sm]/item:size-8 group-data-[size=xs]/item:size-6 [&_img]:size-full [&_img]:object-cover",
 			},
 		},
 		defaultVariants: {
@@ -35,7 +36,7 @@
 	bind:this={ref}
 	data-slot="item-media"
 	data-variant={variant}
-	class={cn(itemMediaVariants({ variant }), className)}
+	class={cn([itemMediaVariants({ variant }), className])}
 	{...restProps}
 >
 	{@render children?.()}

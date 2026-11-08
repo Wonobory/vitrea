@@ -9,12 +9,4 @@ export {
 	type ToggleVariants,
 } from "./toggle.svelte";
 
-export {
-	Root,
-	Label,
-	Icon,
-	//
-	Root as Toggle,
-	Label as ToggleLabel,
-	Icon as ToggleIcon,
-};
+export { Root, Label, Icon, Root as Toggle, Label as ToggleLabel, Icon as ToggleIcon };

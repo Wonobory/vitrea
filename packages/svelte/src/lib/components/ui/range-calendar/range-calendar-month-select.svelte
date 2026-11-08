@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { RangeCalendar as RangeCalendarPrimitive } from "bits-ui";
 	import { cn, type WithoutChildrenOrChild } from "$lib/utils.js";
-	import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
+	import ChevronDownIcon from "@lucide/svelte/icons/chevron-down";
 
 	let {
 		ref = $bindable(null),
@@ -13,10 +13,10 @@
 </script>
 
 <span
-	class={cn(
+	class={cn([
 		"relative flex rounded-md border border-foreground/15 dark:border-input bg-[color-mix(in_oklch,var(--muted)_70%,var(--card))] shadow-[inset_0_1px_2px_rgb(0_0_0/0.06)] transition-[background-color,border-color,box-shadow] hover:border-foreground/30 dark:hover:border-foreground/20 has-focus:border-ring has-focus:bg-card has-focus:shadow-none has-focus:ring-3 has-focus:ring-ring/20 dark:bg-[color-mix(in_oklch,var(--background)_35%,var(--card))] dark:shadow-[inset_0_1px_2px_rgb(0_0_0/0.35)]",
-		className
-	)}
+		className,
+	])}
 >
 	<RangeCalendarPrimitive.MonthSelect bind:ref class="absolute inset-0 opacity-0" {...restProps}>
 		{#snippet child({ props, monthItems, selectedMonthItem })}
@@ -37,7 +37,7 @@
 				aria-hidden="true"
 			>
 				{monthItems.find((item) => item.value === value)?.label || selectedMonthItem.label}
-				<ChevronDownIcon class={cn("size-4", className)} />
+				<ChevronDownIcon class={cn(["size-4", className])} />
 			</span>
 		{/snippet}
 	</RangeCalendarPrimitive.MonthSelect>

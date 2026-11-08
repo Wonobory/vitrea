@@ -2,7 +2,7 @@
 	import type { HTMLAttributes } from "svelte/elements";
 	import type { WithElementRef } from "$lib/utils.js";
 	import { cn } from "$lib/utils.js";
-	import MinusIcon from '@lucide/svelte/icons/minus';
+	import MinusIcon from "@lucide/svelte/icons/minus";
 
 	let {
 		ref = $bindable(null),
@@ -16,12 +16,15 @@
 	bind:this={ref}
 	data-slot="input-otp-separator"
 	role="separator"
-	class={cn("flex items-center text-muted-foreground [&_svg:not([class*='size-'])]:size-4", className)}
+	class={cn([
+		"flex items-center text-muted-foreground [&_svg:not([class*='size-'])]:size-4",
+		className,
+	])}
 	{...restProps}
 >
 	{#if children}
 		{@render children?.()}
 	{:else}
-		<MinusIcon  />
+		<MinusIcon />
 	{/if}
 </div>

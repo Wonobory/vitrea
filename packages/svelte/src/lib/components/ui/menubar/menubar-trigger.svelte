@@ -12,9 +12,9 @@
 <MenubarPrimitive.Trigger
 	bind:ref
 	data-slot="menubar-trigger"
-	class={cn(
+	class={cn([
 		"relative z-10 flex h-full items-center rounded-md px-2.5 text-sm font-medium text-muted-foreground transition-colors outline-hidden select-none hover:text-foreground data-[state=open]:text-foreground",
-		className
-	)}
+		className,
+	])}
 	{...restProps}
 />

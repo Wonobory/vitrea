@@ -13,8 +13,6 @@
 		size = "default",
 		portalProps,
 		children,
-		// Unlock the page once the modal has faded out: unlocked mid-fade, the scrollbar came back
-		// and narrowed the window under a modal centred on it, which slid ~8 px left.
 		restoreScrollDelay = EXIT,
 		...restProps
 	}: WithoutChild<AlertDialogPrimitive.ContentProps> & {
@@ -25,17 +23,15 @@
 
 <AlertDialogPortal {...portalProps}>
 	<AlertDialogOverlay />
-	<!-- `forceMount` + `child`: in and out with Svelte transitions
-	     (`$lib/transitions`), not CSS animations. -->
 	<AlertDialogPrimitive.Content
 		bind:ref
 		forceMount
 		data-slot="alert-dialog-content"
 		data-size={size}
-		class={cn(
+		class={cn([
 			"glass-panel text-popover-foreground gap-6 rounded-2xl p-6 data-[size=default]:max-w-xs data-[size=sm]:max-w-xs data-[size=default]:sm:max-w-lg group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid w-full -translate-x-1/2 -translate-y-1/2 outline-none",
-			className
-		)}
+			className,
+		])}
 		{restoreScrollDelay}
 		{...restProps}
 	>

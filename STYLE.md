@@ -3,6 +3,7 @@
 What makes a component look and feel like Pujarr. Every `src/lib/components/ui/*` component follows these.
 
 ## Surfaces
+
 - **Interactive controls are glass** (`app.css`, `.glass-*`):
   - `glass-fill`: the primary / selected / "on" state (filled checkbox, active switch track, selected day).
   - `glass-neutral`: neutral controls (input-like triggers, outline buttons, toggles).
@@ -13,6 +14,7 @@ What makes a component look and feel like Pujarr. Every `src/lib/components/ui/*
 - Tinted glass: set `--tone` (e.g. `glass-fill [--tone:var(--danger)]`); mix colours `in oklab` (oklch drifts to pink).
 
 ## Motion
+
 - **Press/hover**: `use:press` (`$lib/press`) on clickable glass. Elements with it must use `transition-colors`, never `transition`/`transition-all` (they include `scale`).
 - **Floating content enters with the spring**: bits-ui `forceMount` + `child` snippet, `in:fadeScale={floatingIn}` / `out:fade={{ duration: FLOATING_OUT }}`, `origin-(--bits-floating-transform-origin)` (`$lib/transitions`). Reference: `popover/popover-content.svelte`. Modals use `modalIn` (see `dialog/dialog-content.svelte`).
 - **Selection moves, it doesn't jump**: one indicator slides to the active item with `use:indicator` (`$lib/indicator`). Reference: `tabs/tabs-list.svelte` + `tabs-trigger.svelte`.
@@ -22,12 +24,22 @@ What makes a component look and feel like Pujarr. Every `src/lib/components/ui/*
 - Backdrops blur, they don't darken (`backdrop-blur-[10px]`, `animate-backdrop-in`).
 
 ## Type
+
 - Inter for UI; `font-display` with `[font-stretch:112%]` for titles (card title, dialog title, empty title).
 - Small labels in small caps: `text-2xs font-semibold tracking-wider uppercase text-muted-foreground`.
 - Numbers that change: `tabular-nums`.
 
 ## Detail
+
 - Focus: the global 2px `--ring` outline (`:focus-visible`); don't stack a second ring.
 - Radii: controls `rounded-md`/`rounded-lg`, floating sheets `rounded-xl`, containers `rounded-xl`.
 - Icons: lucide, `size-4` in controls.
 - Keep component APIs (props, exports) unchanged so the examples keep working.
+
+## Code
+
+- `cn` takes one array: `cn(["base", cond && "x", className])`, never `cn("a", "b")` (the signature enforces it).
+- No `function` declarations: `const name = (…) => …`. Without hoisting, declare before use.
+- Custom transitions live in `$lib/transitions`, never inside a component. Svelte's own (`fade`, `slide`, `scale`) are imported directly.
+- Comments: only JSDoc that an editor shows to package users (props, public exports), one line, about how to use it. No `//`, no `<!-- -->`, no CSS comments, no rationale. Usage notes that can't live there go in the package README.
+- Formatting: Prettier (`.prettierrc` at the root).

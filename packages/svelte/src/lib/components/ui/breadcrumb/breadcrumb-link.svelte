@@ -16,7 +16,10 @@
 
 	const attrs = $derived({
 		"data-slot": "breadcrumb-link",
-		class: cn("rounded-sm underline-offset-4 decoration-foreground/30 transition-colors hover:text-foreground hover:underline", className),
+		class: cn([
+			"rounded-sm underline-offset-4 decoration-foreground/30 transition-colors hover:text-foreground hover:underline",
+			className,
+		]),
 		href,
 		...restProps,
 	});

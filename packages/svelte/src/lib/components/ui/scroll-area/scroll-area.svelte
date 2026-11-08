@@ -21,22 +21,23 @@
 		viewportRef?: HTMLElement | null;
 		/** Fade the content out at an edge while there's more to scroll that way. */
 		fade?: boolean;
-		/** Drag the content with the mouse to scroll it, with momentum on release (touch already scrolls natively). */
+		/** Drag to scroll with the mouse, with momentum on release. */
 		drag?: boolean;
 	} = $props();
 
-	// How much is left to scroll before and after, capped at the fade's length.
 	const FADE = 28;
 	let before = $state(0);
 	let after = $state(0);
 	const horizontal = $derived(orientation === "horizontal");
-	function measure() {
+	const measure = () => {
 		const v = viewportRef;
 		if (!v) return;
-		const [pos, size, view] = horizontal ? [v.scrollLeft, v.scrollWidth, v.clientWidth] : [v.scrollTop, v.scrollHeight, v.clientHeight];
+		const [pos, size, view] = horizontal
+			? [v.scrollLeft, v.scrollWidth, v.clientWidth]
+			: [v.scrollTop, v.scrollHeight, v.clientHeight];
 		before = Math.min(FADE, Math.max(0, pos));
 		after = Math.min(FADE, Math.max(0, size - view - pos));
-	}
+	};
 	$effect(() => {
 		const v = viewportRef;
 		if (!v || !fade) return;
@@ -46,22 +47,38 @@
 		if (v.firstElementChild) ro.observe(v.firstElementChild);
 		return () => ro.disconnect();
 	});
-	// Drag to scroll. Below 4 px it's still a click; past that, the click that
-	// ends the drag is swallowed so it doesn't trigger whatever is under it.
-	type Drag = { x: number; y: number; left: number; top: number; moved: boolean; vx: number; vy: number; t: number };
+	type Drag = {
+		x: number;
+		y: number;
+		left: number;
+		top: number;
+		moved: boolean;
+		vx: number;
+		vy: number;
+		t: number;
+	};
 	let grab = $state<Drag | null>(null);
 	let glide = 0;
 	const canX = $derived(orientation !== "vertical");
 	const canY = $derived(orientation !== "horizontal");
-	function dragStart(e: PointerEvent) {
+	const dragStart = (e: PointerEvent) => {
 		if (!drag || e.pointerType !== "mouse" || e.button !== 0 || !viewportRef) return;
-		// No text selection while dragging (fields inside still get focus).
-		if (!(e.target as Element).closest("input, textarea, select, [contenteditable]")) e.preventDefault();
+		if (!(e.target as Element).closest("input, textarea, select, [contenteditable]"))
+			e.preventDefault();
 		cancelAnimationFrame(glide);
 		const v = viewportRef;
-		grab = { x: e.clientX, y: e.clientY, left: v.scrollLeft, top: v.scrollTop, moved: false, vx: 0, vy: 0, t: e.timeStamp };
-	}
-	function dragMove(e: PointerEvent) {
+		grab = {
+			x: e.clientX,
+			y: e.clientY,
+			left: v.scrollLeft,
+			top: v.scrollTop,
+			moved: false,
+			vx: 0,
+			vy: 0,
+			t: e.timeStamp,
+		};
+	};
+	const dragMove = (e: PointerEvent) => {
 		const g = grab;
 		const v = viewportRef;
 		if (!g || !v) return;
@@ -72,20 +89,21 @@
 		const [px, py] = [v.scrollLeft, v.scrollTop];
 		if (canX) v.scrollLeft = g.left - dx;
 		if (canY) v.scrollTop = g.top - dy;
-		// Velocity in px/ms, smoothed, for the glide.
 		const dt = Math.max(1, e.timeStamp - g.t);
 		g.vx = 0.7 * ((v.scrollLeft - px) / dt) + 0.3 * g.vx;
 		g.vy = 0.7 * ((v.scrollTop - py) / dt) + 0.3 * g.vy;
 		g.t = e.timeStamp;
-	}
-	function dragEnd(e: PointerEvent) {
+	};
+	const dragEnd = (e: PointerEvent) => {
 		const g = grab;
 		grab = null;
 		const v = viewportRef;
 		if (!g?.moved || !v) return;
-		window.addEventListener("click", (c) => (c.stopPropagation(), c.preventDefault()), { capture: true, once: true });
+		window.addEventListener("click", (c) => (c.stopPropagation(), c.preventDefault()), {
+			capture: true,
+			once: true,
+		});
 		if (e.timeStamp - g.t > 80 || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-		// Momentum: keep going and slow down, like a flick.
 		let { vx, vy } = g;
 		let last = performance.now();
 		const step = (now: number) => {
@@ -99,7 +117,7 @@
 			if (Math.hypot(vx, vy) > 0.02) glide = requestAnimationFrame(step);
 		};
 		glide = requestAnimationFrame(step);
-	}
+	};
 
 	const mask = $derived(
 		fade
@@ -110,23 +128,20 @@
 
 <svelte:window onpointermove={dragMove} onpointerup={dragEnd} onpointercancel={dragEnd} />
 
-<!-- The fade grows with the distance to the edge (up to 28 px), so it
-     appears and goes as you scroll instead of switching on and off. The
-     scrollbar sits outside the masked viewport and never fades. -->
 <ScrollAreaPrimitive.Root
 	bind:ref
 	data-slot="scroll-area"
-	class={cn("relative", className)}
+	class={cn(["relative", className])}
 	{...restProps}
 >
 	<ScrollAreaPrimitive.Viewport
 		bind:ref={viewportRef}
 		data-slot="scroll-area-viewport"
-		class={cn(
+		class={cn([
 			"cn-scroll-area-viewport focus-visible:ring-ring/50 size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:outline-1",
 			drag && "cursor-grab",
-			grab?.moved && "cursor-grabbing select-none"
-		)}
+			grab?.moved && "cursor-grabbing select-none",
+		])}
 		style={mask ? `mask-image: ${mask}` : undefined}
 		onscroll={fade ? measure : undefined}
 		onpointerdown={dragStart}

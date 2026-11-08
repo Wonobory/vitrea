@@ -3,7 +3,7 @@
 	import { getEmblaContext } from "./context.js";
 	import { cn } from "$lib/utils.js";
 	import { Button, type Props } from "$lib/components/ui/button/index.js";
-	import ChevronLeftIcon from '@lucide/svelte/icons/chevron-left';
+	import ChevronLeftIcon from "@lucide/svelte/icons/chevron-left";
 
 	let {
 		ref = $bindable(null),
@@ -22,18 +22,18 @@
 	{size}
 	aria-disabled={!emblaCtx.canScrollPrev}
 	disabled={!emblaCtx.canScrollPrev}
-	class={cn(
+	class={cn([
 		"rounded-full absolute touch-manipulation",
 		emblaCtx.orientation === "horizontal"
 			? "inset-y-0 -start-12 my-auto"
 			: "start-1/2 -top-12 -translate-x-1/2 rotate-90",
-		className
-	)}
+		className,
+	])}
 	onclick={emblaCtx.scrollPrev}
 	onkeydown={emblaCtx.handleKeyDown}
 	{...restProps}
 	bind:ref
 >
-	<ChevronLeftIcon  />
+	<ChevronLeftIcon />
 	<span class="sr-only">Previous slide</span>
 </Button>

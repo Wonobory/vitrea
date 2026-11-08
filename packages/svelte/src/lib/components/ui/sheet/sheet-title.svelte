@@ -12,6 +12,9 @@
 <SheetPrimitive.Title
 	bind:ref
 	data-slot="sheet-title"
-	class={cn("text-foreground font-display text-lg leading-tight font-semibold tracking-tight [font-stretch:112%]", className)}
+	class={cn([
+		"text-foreground font-display text-lg leading-tight font-semibold tracking-tight [font-stretch:112%]",
+		className,
+	])}
 	{...restProps}
 />

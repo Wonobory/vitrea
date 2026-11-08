@@ -17,14 +17,13 @@ export type ExtractSnippetParams<T> = T extends Snippet<[infer P]> ? P : never;
 
 export type TooltipPayload = Tooltip.TooltipSeries;
 
-// Helper to extract item config from a payload.
-export function getPayloadConfigFromPayload(
+export const getPayloadConfigFromPayload = (
 	config: ChartConfig,
 	payload: TooltipPayload,
 	key: string,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	data?: Record<string, any> | null
-) {
+) => {
 	if (typeof payload !== "object" || payload === null) return undefined;
 
 	const payloadConfig =
@@ -51,7 +50,7 @@ export function getPayloadConfigFromPayload(
 	}
 
 	return configLabelKey in config ? config[configLabelKey] : config[key as keyof typeof config];
-}
+};
 
 type ChartContextValue = {
 	config: ChartConfig;
@@ -59,10 +58,10 @@ type ChartContextValue = {
 
 const chartContextKey = Symbol("chart-context");
 
-export function setChartContext(value: ChartContextValue) {
+export const setChartContext = (value: ChartContextValue) => {
 	return setContext(chartContextKey, value);
-}
+};
 
-export function useChart() {
+export const useChart = () => {
 	return getContext<ChartContextValue>(chartContextKey);
-}
+};

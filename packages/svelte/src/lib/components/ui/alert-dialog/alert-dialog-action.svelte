@@ -25,8 +25,11 @@
 	{#snippet child({ props })}
 		<button
 			{...props}
-			use:press={variant === "default" || variant === "outline" || variant === "ghost" || variant === "destructive"}
-			class={cn(buttonVariants({ variant, size }), className)}
+			use:press={variant === "default" ||
+				variant === "outline" ||
+				variant === "ghost" ||
+				variant === "destructive"}
+			class={cn([buttonVariants({ variant, size }), className])}
 		>
 			{@render children?.()}
 		</button>

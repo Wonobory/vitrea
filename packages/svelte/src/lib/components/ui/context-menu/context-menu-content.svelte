@@ -7,7 +7,6 @@
 	import { floatingIn, fadeScale, FLOATING_OUT } from "$lib/transitions";
 	import { indicator } from "$lib/indicator";
 
-	// The highlighted row, or the sub-menu trigger whose sub-menu is open.
 	const HIGHLIGHTED = '[data-highlighted], [data-state="open"][data-slot$="sub-trigger"]';
 
 	let {
@@ -21,7 +20,6 @@
 	} = $props();
 </script>
 
-<!-- Glass sheet that grows from where it opened (see popover-content). -->
 <ContextMenuPortal {...portalProps}>
 	<ContextMenuPrimitive.Content bind:ref forceMount data-slot="context-menu-content" {...restProps}>
 		{#snippet child({ wrapperProps, props, open })}
@@ -29,11 +27,16 @@
 				<div {...wrapperProps}>
 					<div
 						{...props}
-						class={cn(
+						class={cn([
 							"glass-panel z-50 min-w-44 max-h-(--bits-context-menu-content-available-height) origin-(--bits-floating-transform-origin) overflow-x-hidden overflow-y-auto rounded-xl p-1 text-popover-foreground outline-none",
-							className
-						)}
-						use:indicator={{ active: HIGHLIGHTED, attributes: ["data-highlighted"], curve: "smooth", className: "glass-neutral rounded-md" }}
+							className,
+						])}
+						use:indicator={{
+							active: HIGHLIGHTED,
+							attributes: ["data-highlighted"],
+							curve: "smooth",
+							className: "glass-neutral rounded-md",
+						}}
 						in:fadeScale={floatingIn}
 						out:fade={{ duration: FLOATING_OUT }}
 					>

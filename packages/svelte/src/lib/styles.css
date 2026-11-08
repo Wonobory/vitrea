@@ -1,19 +1,8 @@
-/*
- * @vitreakit/svelte styles. Import once, after Tailwind:
- *   @import "tailwindcss";
- *   @import "@vitreakit/svelte/styles.css";
- *
- * It brings the Vítrea core (tokens and `.glass-*`), the animation utilities
- * and the bits-ui state variants, and tells Tailwind to scan these components.
- */
 @import "tw-animate-css";
 @import "@vitreakit/core/styles.css";
 
 @source "./";
 
-/* --- bits-ui state variants and keyframes, copied from shadcn-svelte 1.7.2
-   (dist/tailwind.css, MIT License, Copyright (c) 2023 shadcn and huntabyte),
-   so the package doesn't depend on the shadcn-svelte CLI. --- */
 @theme inline {
 	@keyframes accordion-down {
 		from {
@@ -34,7 +23,6 @@
 	}
 }
 
-/* Custom variants */
 @custom-variant data-open {
 	&:where([data-state="open"]),
 	&:where([data-open]:not([data-open="false"])) {
@@ -63,11 +51,6 @@
 	}
 }
 
-/* @custom-variant data-selected {
-	&:where([data-selected="true"]) {
-		@slot;
-	}
-} */
 
 @custom-variant data-disabled {
 	&:where([data-disabled="true"]),
@@ -104,7 +87,6 @@
 	}
 }
 
-/* scroll-fade */
 @property --scroll-fade-t {
 	syntax: "<length-percentage>";
 	inherits: false;
@@ -531,7 +513,6 @@
 	--scroll-fade-mask: none;
 }
 
-/* shimmer */
 @property --shimmer-angle {
 	syntax: "<angle>";
 	inherits: true;

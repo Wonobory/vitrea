@@ -34,7 +34,7 @@
 	bind:this={ref}
 	data-slot="empty-icon"
 	data-variant={variant}
-	class={cn(emptyMediaVariants({ variant }), className)}
+	class={cn([emptyMediaVariants({ variant }), className])}
 	{...restProps}
 >
 	{@render children?.()}

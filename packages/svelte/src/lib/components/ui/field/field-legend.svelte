@@ -17,7 +17,10 @@
 	bind:this={ref}
 	data-slot="field-legend"
 	data-variant={variant}
-	class={cn("mb-3 data-[variant=label]:text-2xs data-[variant=label]:font-semibold data-[variant=label]:tracking-wider data-[variant=label]:text-muted-foreground data-[variant=label]:uppercase data-[variant=legend]:font-display data-[variant=legend]:text-base data-[variant=legend]:font-semibold data-[variant=legend]:[font-stretch:112%]", className)}
+	class={cn([
+		"mb-3 data-[variant=label]:text-2xs data-[variant=label]:font-semibold data-[variant=label]:tracking-wider data-[variant=label]:text-muted-foreground data-[variant=label]:uppercase data-[variant=legend]:font-display data-[variant=legend]:text-base data-[variant=legend]:font-semibold data-[variant=legend]:[font-stretch:112%]",
+		className,
+	])}
 	{...restProps}
 >
 	{@render children?.()}

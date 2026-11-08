@@ -1,14 +1,9 @@
 <script lang="ts">
-	/**
-	 * The icon of a toggle, filled while on. Turning it on (not off: that just
-	 * empties) it beats from 0.6 to 1.3 and settles while a ring opens and six
-	 * sparks fly out, in the brand accent. From Pujarr's follow button.
-	 */
 	import type { Component } from "svelte";
 
-	let { pressed, icon: IconComponent }: { pressed: boolean; icon: Component<{ class?: string }> } = $props();
+	let { pressed, icon: IconComponent }: { pressed: boolean; icon: Component<{ class?: string }> } =
+		$props();
 
-	// Each time it turns on, the `{#key}` remounts the icon and its burst.
 	let beat = $state(0);
 	let wasPressed: boolean | undefined;
 	$effect.pre(() => {
@@ -19,7 +14,11 @@
 
 <span class="relative grid size-4 shrink-0 place-items-center">
 	{#key beat}
-		<IconComponent class={["size-4 transition-colors", pressed && "fill-current text-primary", beat && "beating"].filter(Boolean).join(" ")} />
+		<IconComponent
+			class={["size-4 transition-colors", pressed && "fill-current text-primary", beat && "beating"]
+				.filter(Boolean)
+				.join(" ")}
+		/>
 		{#if beat && pressed}
 			<span class="ring" aria-hidden="true"></span>
 			{#each [0, 60, 120, 180, 240, 300] as a (a)}
@@ -34,9 +33,15 @@
 		animation: beat 480ms cubic-bezier(0.22, 1, 0.36, 1);
 	}
 	@keyframes beat {
-		0% { scale: 0.6; }
-		40% { scale: 1.3; }
-		100% { scale: 1; }
+		0% {
+			scale: 0.6;
+		}
+		40% {
+			scale: 1.3;
+		}
+		100% {
+			scale: 1;
+		}
 	}
 	.ring {
 		position: absolute;
@@ -48,8 +53,14 @@
 		animation: ring 560ms cubic-bezier(0.22, 1, 0.36, 1);
 	}
 	@keyframes ring {
-		0% { scale: 0.4; opacity: 1; }
-		100% { scale: 1.9; opacity: 0; }
+		0% {
+			scale: 0.4;
+			opacity: 1;
+		}
+		100% {
+			scale: 1.9;
+			opacity: 0;
+		}
 	}
 	.spark {
 		position: absolute;
@@ -65,10 +76,20 @@
 		animation: spark 620ms cubic-bezier(0.22, 1, 0.36, 1) 80ms;
 	}
 	@keyframes spark {
-		0% { transform: rotate(var(--a)) translateY(-7px) scale(1); opacity: 1; }
-		100% { transform: rotate(var(--a)) translateY(-20px) scale(0.3); opacity: 0; }
+		0% {
+			transform: rotate(var(--a)) translateY(-7px) scale(1);
+			opacity: 1;
+		}
+		100% {
+			transform: rotate(var(--a)) translateY(-20px) scale(0.3);
+			opacity: 0;
+		}
 	}
 	@media (prefers-reduced-motion: reduce) {
-		:global(.beating), .ring, .spark { animation: none; }
+		:global(.beating),
+		.ring,
+		.spark {
+			animation: none;
+		}
 	}
 </style>

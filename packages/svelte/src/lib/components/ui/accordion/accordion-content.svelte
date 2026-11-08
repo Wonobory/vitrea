@@ -12,7 +12,6 @@
 	}: WithoutChild<AccordionPrimitive.ContentProps> = $props();
 </script>
 
-<!-- `forceMount` + `child`: opens with the spring, closes quickly. -->
 <AccordionPrimitive.Content bind:ref forceMount data-slot="accordion-content" {...restProps}>
 	{#snippet child({ props, open })}
 		{#if open}
@@ -23,10 +22,10 @@
 				out:slide={{ duration: 180 }}
 			>
 				<div
-					class={cn(
+					class={cn([
 						"pt-0 pb-4 text-muted-foreground [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground [&_p:not(:last-child)]:mb-4",
-						className
-					)}
+						className,
+					])}
 				>
 					{@render children?.()}
 				</div>
