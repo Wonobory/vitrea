@@ -21,7 +21,7 @@
   import { MediaQuery } from "svelte/reactivity";
   import { springSmall } from "$lib/springs";
   import { stretchSpring, GLASS_SELECTOR } from "$lib/glass";
-  import Lens from "$lib/components/pujarr/Lens.svelte";
+  import Lens from "$lib/components/vitrea/Lens.svelte";
 
   let {
     options,

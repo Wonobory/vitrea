@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Segmented from "$lib/components/pujarr/Segmented.svelte";
+  import Segmented from "$lib/components/vitrea/Segmented.svelte";
 
   let view = $state<"map" | "list" | "grid">("map");
   let range = $state<"day" | "week" | "month" | "year">("week");

@@ -1,6 +1,6 @@
 <script lang="ts">
   import Histogram from "$lib/components/vitrea/Histogram.svelte";
-  import Segmented from "$lib/components/pujarr/Segmented.svelte";
+  import Segmented from "$lib/components/vitrea/Segmented.svelte";
   import * as Chart from "$lib/components/ui/chart";
   import { BarChart } from "layerchart";
 

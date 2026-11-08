@@ -8,9 +8,9 @@
   import MenuIcon from "@lucide/svelte/icons/menu";
   import SunIcon from "@lucide/svelte/icons/sun";
   import MoonIcon from "@lucide/svelte/icons/moon";
-  import { GROUPS, NAME } from "$lib/docs";
-  import AccentPicker from "$lib/components/vitrea/AccentPicker.svelte";
-  import Wordmark from "$lib/components/vitrea/Wordmark.svelte";
+  import { GROUPS, NAME } from "$docs/docs";
+  import AccentPicker from "$docs/components/AccentPicker.svelte";
+  import Wordmark from "$docs/components/Wordmark.svelte";
 
   let { children } = $props();
   let menu = $state(false);

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import RangeHistogram from "$lib/components/pujarr/RangeHistogram.svelte";
+  import RangeHistogram from "$lib/components/vitrea/RangeHistogram.svelte";
   import { Input } from "$lib/components/ui/input";
 
   // Example data, not real auctions: a seeded random sample so it's the same every load.

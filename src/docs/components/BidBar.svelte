@@ -22,9 +22,9 @@
   import { MediaQuery } from "svelte/reactivity";
   import { springSmall } from "$lib/springs";
   import { stretchSpring, GLASS } from "$lib/glass";
-  import Lens from "$lib/components/pujarr/Lens.svelte";
+  import Lens from "$lib/components/vitrea/Lens.svelte";
   import * as Tooltip from "$lib/components/ui/tooltip";
-  import type { BidCurve } from "$lib/bid-curve";
+  import type { BidCurve } from "$docs/bid-curve";
 
   /**
    * Least to most certain: not accepted, up to others, the debtor can top
@@ -50,7 +50,7 @@
     /** The value, already formatted (`\n` allowed): shown under the lens while dragging, so you don't have to look elsewhere. Above, it covered the curve. */
     bubble?: string;
     /**
-     * Where bids land (`$lib/bid-curve`): the curve and the threshold peaks.
+     * Where bids land (`$docs/bid-curve`): the curve and the threshold peaks.
      * Above the bar, like YouTube's "most replayed"; what's left of the
      * thumb, in colour.
      */

@@ -9,7 +9,7 @@
   import { Slider } from "$lib/components/ui/slider";
   import { Button } from "$lib/components/ui/button";
   import { indicator } from "$lib/indicator";
-  import { ACCENTS, accent, initAccent, setAccent } from "$lib/accent.svelte";
+  import { ACCENTS, accent, initAccent, setAccent } from "$docs/accent.svelte";
 
   onMount(initAccent);
 

@@ -16,7 +16,7 @@
 	import { cn, type WithoutChildrenOrChild } from "$lib/utils.js";
 	import { springSmall } from "$lib/springs";
 	import { stretchSpring, GLASS } from "$lib/glass";
-	import Lens from "$lib/components/pujarr/Lens.svelte";
+	import Lens from "$lib/components/vitrea/Lens.svelte";
 
 	let {
 		ref = $bindable(null),

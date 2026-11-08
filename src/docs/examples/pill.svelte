@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Pill from "$lib/components/pujarr/Pill.svelte";
+  import Pill from "$lib/components/vitrea/Pill.svelte";
 
   const types = [
     ["Flat", 1284],

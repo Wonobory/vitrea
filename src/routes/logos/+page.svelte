@@ -1,6 +1,6 @@
 <script lang="ts">
   // Logo concepts for Vitrea. Not linked from the site: a page to compare them.
-  import Wordmark from "$lib/components/vitrea/Wordmark.svelte";
+  import Wordmark from "$docs/components/Wordmark.svelte";
   const concepts = [
     { id: "broken", name: "Broken line", idea: "A straight line that shifts where it passes behind the glass: refraction, drawn in one stroke. Reads at 16 px." },
     { id: "bead", name: "Bead", idea: "A drop of glass with its specular highlight and the caustic it throws below. The header's dot, finished." },
