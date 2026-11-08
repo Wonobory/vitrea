@@ -1,11 +1,10 @@
 <script lang="ts">
+	import FloatingSheet from "$lib/components/floating-sheet.svelte";
 	import { LinkPreview as HoverCardPrimitive } from "bits-ui";
 	import { cn, type WithoutChildrenOrChild } from "$lib/utils.js";
 	import HoverCardPortal from "./hover-card-portal.svelte";
 	import type { ComponentProps } from "svelte";
-	import { fade } from "svelte/transition";
 	import GlassArrow from "$lib/components/vitrea/GlassArrow.svelte";
-	import { floatingIn, fadeScale, FLOATING_OUT } from "$lib/transitions";
 
 	let {
 		ref = $bindable(null),
@@ -30,22 +29,15 @@
 		{...restProps}
 	>
 		{#snippet child({ wrapperProps, props, open })}
-			{#if open}
-				<div {...wrapperProps}>
-					<div
-						{...props}
-						class={cn([
-							"glass-panel z-50 w-64 origin-(--bits-floating-transform-origin) rounded-xl p-4 text-sm text-popover-foreground outline-hidden",
-							className,
-						])}
-						in:fadeScale={floatingIn}
-						out:fade={{ duration: FLOATING_OUT }}
-					>
-						{@render children?.()}
-						<GlassArrow />
-					</div>
-				</div>
-			{/if}
+			<FloatingSheet
+				{wrapperProps}
+				{props}
+				{open}
+				class={cn(["w-64 p-4 text-sm text-popover-foreground outline-hidden", className])}
+			>
+				{@render children?.()}
+				<GlassArrow />
+			</FloatingSheet>
 		{/snippet}
 	</HoverCardPrimitive.Content>
 </HoverCardPortal>

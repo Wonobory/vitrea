@@ -62,6 +62,31 @@ export const GLASS_SELECTOR: Record<"light" | "dark", GlassParams> = {
 	},
 };
 
+/** Round lens over a surface (slider thumb, cursor lens). */
+export const LENS_ROUND = { glass: GLASS, chroma: 0.65, specular: 1.5 };
+
+/** Lens of an option selector (segmented control, page strip). */
+export const LENS_SELECTOR = { glass: GLASS_SELECTOR, chroma: 0.1, specular: 1 };
+export const selectorShift = (w: number, h: number) => ({
+	dx: Math.min(0.13 * w, 6),
+	dy: 0.06 * h,
+});
+
+const alpha = (c: string) => {
+	const m = c.match(/\/\s*([\d.]+)(%?)\s*\)$/) ?? c.match(/^rgba\(.*,\s*([\d.]+)\)$/);
+	if (!m) return c === "transparent" ? 0 : 1;
+	return Number(m[1]) / (m[2] ? 100 : 1);
+};
+
+/** The first fully opaque background behind `el`. */
+export const backdropOf = (el: Element | null) => {
+	for (let n = el; n; n = n.parentElement) {
+		const c = getComputedStyle(n).backgroundColor;
+		if (alpha(c) >= 1) return c;
+	}
+	return "var(--background)";
+};
+
 const erf = (x: number) => Math.tanh(1.7724538509 * x);
 
 const meanSlope = (R: number, a: number) => {

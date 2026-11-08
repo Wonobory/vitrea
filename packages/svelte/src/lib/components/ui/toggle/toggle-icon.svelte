@@ -88,11 +88,4 @@
 			opacity: 0;
 		}
 	}
-	@media (prefers-reduced-motion: reduce) {
-		:global(.beating),
-		.ring,
-		.spark {
-			animation: none;
-		}
-	}
 </style>

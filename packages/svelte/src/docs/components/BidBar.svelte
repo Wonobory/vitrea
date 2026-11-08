@@ -3,7 +3,7 @@
 	import { Tween } from "svelte/motion";
 	import { reducedMotion as reduced } from "$lib/transitions";
 	import { springSmall } from "$lib/springs";
-	import { stretchSpring, GLASS } from "$lib/glass";
+	import { stretchSpring, LENS_ROUND } from "$lib/glass";
 	import Lens from "$lib/components/vitrea/Lens.svelte";
 	import * as Tooltip from "$lib/components/ui/tooltip";
 	import type { BidCurve } from "$docs/bid-curve";
@@ -52,8 +52,6 @@
 	const ACTIVE = 28;
 	const THICK = 1.7;
 	const STRENGTH = 0.22;
-	const CHROMA = 0.65;
-	const SPECULAR = 1.5;
 
 	let width = $state(0);
 	let pressed = $state(false);
@@ -189,12 +187,9 @@
 					{h}
 					radius={w / 2}
 					shape={{ w: ACTIVE, h: ACTIVE, radius: ACTIVE / 2 }}
-					glass={GLASS}
+					{...LENS_ROUND}
 					dx={STRENGTH * d}
 					dy={STRENGTH * d}
-					chroma={CHROMA}
-					specular={SPECULAR}
-					background="var(--panel)"
 					{width}
 					height={24}
 				>

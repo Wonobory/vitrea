@@ -1,4 +1,5 @@
 <script lang="ts">
+	import FloatingSheet from "$lib/components/floating-sheet.svelte";
 	import { Select as SelectPrimitive } from "bits-ui";
 	import SelectPortal from "./select-portal.svelte";
 	import SelectScrollUpButton from "./select-scroll-up-button.svelte";
@@ -6,8 +7,6 @@
 	import { cn, type WithoutChild } from "$lib/utils.js";
 	import type { ComponentProps } from "svelte";
 	import type { WithoutChildrenOrChild } from "$lib/utils.js";
-	import { fade } from "svelte/transition";
-	import { floatingIn, fadeScale, FLOATING_OUT } from "$lib/transitions";
 	import { indicator } from "$lib/indicator";
 
 	let {
@@ -33,34 +32,30 @@
 		{...restProps}
 	>
 		{#snippet child({ wrapperProps, props, open })}
-			{#if open}
-				<div {...wrapperProps}>
+			<FloatingSheet
+				{wrapperProps}
+				{props}
+				{open}
+				class={cn([
+					"flex max-h-(--bits-select-content-available-height) min-w-36 flex-col overflow-hidden p-1 text-popover-foreground",
+					className,
+				])}
+			>
+				<SelectScrollUpButton />
+				<SelectPrimitive.Viewport class="w-full min-w-(--bits-select-anchor-width) scroll-my-1">
 					<div
-						{...props}
-						class={cn([
-							"glass-panel z-50 flex max-h-(--bits-select-content-available-height) min-w-36 origin-(--bits-floating-transform-origin) flex-col overflow-hidden rounded-xl p-1 text-popover-foreground",
-							className,
-						])}
-						in:fadeScale={floatingIn}
-						out:fade={{ duration: FLOATING_OUT }}
+						class="relative"
+						use:indicator={{
+							active: "[data-highlighted]",
+							curve: "smooth",
+							className: "glass-neutral rounded-lg",
+						}}
 					>
-						<SelectScrollUpButton />
-						<SelectPrimitive.Viewport class="w-full min-w-(--bits-select-anchor-width) scroll-my-1">
-							<div
-								class="relative"
-								use:indicator={{
-									active: "[data-highlighted]",
-									curve: "smooth",
-									className: "glass-neutral rounded-lg",
-								}}
-							>
-								{@render children?.()}
-							</div>
-						</SelectPrimitive.Viewport>
-						<SelectScrollDownButton />
+						{@render children?.()}
 					</div>
-				</div>
-			{/if}
+				</SelectPrimitive.Viewport>
+				<SelectScrollDownButton />
+			</FloatingSheet>
 		{/snippet}
 	</SelectPrimitive.Content>
 </SelectPortal>

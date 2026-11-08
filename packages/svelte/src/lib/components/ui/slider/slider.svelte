@@ -5,7 +5,7 @@
 	import { reducedMotion as reduced } from "$lib/transitions";
 	import { cn, type WithoutChildrenOrChild } from "$lib/utils.js";
 	import { springSmall } from "$lib/springs";
-	import { stretchSpring, GLASS } from "$lib/glass";
+	import { stretchSpring, LENS_ROUND } from "$lib/glass";
 	import Lens from "$lib/components/vitrea/Lens.svelte";
 
 	let {
@@ -35,7 +35,6 @@
 	let pressed = $state(false);
 	let keyboard = $state(false);
 	let active = $state(0);
-	let backdrop = $state("var(--background)");
 
 	const glass = new Tween(0, { duration: 500, easing: springSmall });
 	$effect(() => {
@@ -67,14 +66,6 @@
 	const lens = $derived(d * (1 + 0.2 * stretch));
 	const showGlass = $derived(glass.current > 0.01 && width > 0);
 
-	const backdropOf = (el: Element | null) => {
-		for (let n = el; n; n = n.parentElement) {
-			const c = getComputedStyle(n).backgroundColor;
-			if (c && c !== "transparent" && !/(,\s*0\)|\/\s*0\))$/.test(c)) return c;
-		}
-		return "var(--background)";
-	};
-
 	$effect(() => {
 		if (!ref) return;
 		const ro = new ResizeObserver(() => (width = ref?.offsetWidth ?? 0));
@@ -95,7 +86,6 @@
 	{min}
 	{max}
 	onpointerdowncapture={() => {
-		backdrop = backdropOf(ref);
 		pressed = true;
 	}}
 	class={cn([
@@ -116,12 +106,9 @@
 				h={lens}
 				radius={lens / 2}
 				shape={{ w: ACTIVE, h: ACTIVE, radius: ACTIVE / 2 }}
-				glass={GLASS}
+				{...LENS_ROUND}
 				dx={STRENGTH * d}
 				dy={STRENGTH * d}
-				chroma={0.65}
-				specular={1.5}
-				background={backdrop}
 				{width}
 				height={8}
 			>
@@ -145,7 +132,6 @@
 				onfocus={(e: FocusEvent) => {
 					active = thumb.index;
 					keyboard = !pressed && (e.currentTarget as HTMLElement).matches(":focus-visible");
-					if (keyboard) backdrop = backdropOf(ref);
 				}}
 				onblur={() => (keyboard = false)}
 				data-keyboard={keyboard && thumb.index === active ? "" : undefined}

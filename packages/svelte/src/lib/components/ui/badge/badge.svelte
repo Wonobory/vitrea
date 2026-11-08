@@ -109,9 +109,4 @@
 			opacity: 0;
 		}
 	}
-	@media (prefers-reduced-motion: reduce) {
-		.badge-pulse::after {
-			animation: none;
-		}
-	}
 </style>

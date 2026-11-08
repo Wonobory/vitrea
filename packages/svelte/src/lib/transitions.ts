@@ -48,6 +48,13 @@ export const floatingIn = {
 	easing: springXSmall,
 	minScale: 0.92,
 } satisfies FadeScaleParams;
+/** Tooltips: quicker and from closer than other floating surfaces. */
+export const tooltipIn = {
+	duration: 220,
+	easing: springXSmall,
+	minScale: 0.85,
+} satisfies FadeScaleParams;
+
 export const FLOATING_OUT = 120;
 
 export const reducedMotion = new MediaQuery("prefers-reduced-motion: reduce");

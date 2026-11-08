@@ -93,7 +93,7 @@
 	};
 </script>
 
-<svelte:window onpointermove={move} onpointerup={up} onpointercancel={up} onblur={up} />
+<svelte:window onblur={up} />
 
 <SwitchPrimitive.Root
 	bind:ref
@@ -107,6 +107,9 @@
 	])}
 	style="width: {s.W}px; height: {s.H}px"
 	onpointerdown={down}
+	onpointermove={move}
+	onpointerup={up}
+	onpointercancel={up}
 	onlostpointercapture={up}
 	onclick={(e: MouseEvent) => {
 		if (dragged) e.preventDefault();

@@ -32,6 +32,10 @@ export {
 	glassMap,
 	glassMapCached,
 	stretchSpring,
+	LENS_ROUND,
+	LENS_SELECTOR,
+	selectorShift,
+	backdropOf,
 	type GlassParams,
 } from "./glass.js";
 export { fuse, type FuseOptions } from "./fuse.js";

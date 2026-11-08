@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount, type Snippet } from "svelte";
-	import { glassMapCached, type GlassParams } from "$lib/glass";
+	import { backdropOf, glassMapCached, type GlassParams } from "$lib/glass";
 	import { mode } from "mode-watcher";
 
 	type Props = {
@@ -19,8 +19,8 @@
 		dy: number;
 		chroma: number;
 		specular: number;
-		/** Opaque background of the copy: what sits behind the content. */
-		background: string;
+		/** Opaque background of the copy. Defaults to the first opaque background behind the lens. */
+		background?: string;
 		/** Size of the container being copied. */
 		width: number;
 		height: number;
@@ -53,6 +53,12 @@
 		webkit = /AppleWebKit/.test(ua) && !/Chrome|Chromium|Android/.test(ua);
 	});
 	const dark = $derived(mounted && mode.current === "dark");
+	let host = $state<HTMLDivElement>();
+	let detected = $state("var(--background)");
+	$effect(() => {
+		void dark;
+		detected = backdropOf(host?.parentElement ?? null);
+	});
 	const px = $derived(webkit ? 1 / window.devicePixelRatio : 1);
 
 	const map = $derived(
@@ -137,7 +143,8 @@
 	style:top="{y - boxH / 2}px"
 	style:width="{boxW}px"
 	style:height="{boxH}px"
-	style:background
+	bind:this={host}
+	style:background={background ?? detected}
 	style:filter="url(#{id})"
 	style:clip-path="inset({hy}px {hx}px round {radius}px)"
 	aria-hidden="true"

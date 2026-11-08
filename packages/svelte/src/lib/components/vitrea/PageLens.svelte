@@ -1,9 +1,10 @@
 <script lang="ts">
+	import { swallowClick, trackDrag } from "$lib/utils";
 	import { onMount, untrack } from "svelte";
 	import { Tween } from "svelte/motion";
 	import { reducedMotion as reduced } from "$lib/transitions";
 	import { springSmall } from "$lib/springs";
-	import { stretchSpring, GLASS_SELECTOR } from "$lib/glass";
+	import { stretchSpring, LENS_SELECTOR, selectorShift } from "$lib/glass";
 	import Lens from "$lib/components/vitrea/Lens.svelte";
 	import { Button } from "$lib/components/ui/button";
 	import ChevronLeftIcon from "@lucide/svelte/icons/chevron-left";
@@ -84,9 +85,11 @@
 
 	let grab: { x: number; from: number; moved: boolean; v: number; t: number } | null = null;
 	const under = $derived(clampPage(Math.round(pos.current)));
+	let stopDrag = () => {};
 	const dragStart = (e: PointerEvent) => {
 		if (e.button !== 0) return;
 		grab = { x: e.clientX, from: pos.current, moved: false, v: 0, t: e.timeStamp };
+		stopDrag = trackDrag(dragMove, dragEnd);
 	};
 	const dragMove = (e: PointerEvent) => {
 		const g = grab;
@@ -106,10 +109,7 @@
 		const g = grab;
 		grab = null;
 		if (!g?.moved) return;
-		window.addEventListener("click", (c) => (c.stopPropagation(), c.preventDefault()), {
-			capture: true,
-			once: true,
-		});
+		if (e.type === "pointerup") swallowClick();
 		const fling = e.timeStamp - g.t > 80 ? 0 : Math.max(-8, Math.min(8, g.v * 300));
 		const target = clampPage(Math.round(pos.current + fling));
 		if (target === page) pos.set(page, { duration: reduced.current ? 0 : TRAVEL });
@@ -132,7 +132,7 @@
 		};
 		mounted = true;
 		track.addEventListener("wheel", wheel, { passive: false });
-		return () => (track.removeEventListener("wheel", wheel), grow.stop());
+		return () => (track.removeEventListener("wheel", wheel), grow.stop(), stopDrag());
 	});
 
 	const onKey = (e: KeyboardEvent) => {
@@ -144,8 +144,6 @@
 		e.preventDefault();
 	};
 </script>
-
-<svelte:window onpointermove={dragMove} onpointerup={dragEnd} onpointercancel={dragEnd} />
 
 <nav aria-label={label} class="inline-flex items-center gap-2">
 	<Button
@@ -190,12 +188,8 @@
 				h={lh}
 				radius={LENS.radius}
 				shape={LENS}
-				glass={GLASS_SELECTOR}
-				dx={Math.min(0.13 * lw, 6)}
-				dy={0.06 * lh}
-				chroma={0.1}
-				specular={1}
-				background="var(--card)"
+				{...LENS_SELECTOR}
+				{...selectorShift(lw, lh)}
 				{width}
 				height={HEIGHT}
 			>

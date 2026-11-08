@@ -2,7 +2,7 @@
 	import { reducedMotion } from "$lib/transitions";
 	import { ScrollArea as ScrollAreaPrimitive } from "bits-ui";
 	import { Scrollbar } from "./index.js";
-	import { cn, type WithoutChild } from "$lib/utils.js";
+	import { cn, swallowClick, trackDrag, type WithoutChild } from "$lib/utils.js";
 
 	let {
 		ref = $bindable(null),
@@ -60,7 +60,8 @@
 	};
 	let grab = $state<Drag | null>(null);
 	let glide = 0;
-	$effect(() => () => cancelAnimationFrame(glide));
+	let stopDrag = () => {};
+	$effect(() => () => (cancelAnimationFrame(glide), stopDrag()));
 	const canX = $derived(orientation !== "vertical");
 	const canY = $derived(orientation !== "horizontal");
 	const dragStart = (e: PointerEvent) => {
@@ -69,6 +70,7 @@
 			e.preventDefault();
 		cancelAnimationFrame(glide);
 		const v = viewportRef;
+		stopDrag = trackDrag(dragMove, dragEnd);
 		grab = {
 			x: e.clientX,
 			y: e.clientY,
@@ -101,10 +103,7 @@
 		grab = null;
 		const v = viewportRef;
 		if (!g?.moved || !v) return;
-		window.addEventListener("click", (c) => (c.stopPropagation(), c.preventDefault()), {
-			capture: true,
-			once: true,
-		});
+		if (e.type === "pointerup") swallowClick();
 		if (e.timeStamp - g.t > 80 || reducedMotion.current) return;
 		let { vx, vy } = g;
 		let last = performance.now();
@@ -121,14 +120,13 @@
 		glide = requestAnimationFrame(step);
 	};
 
+	const edge = $derived(horizontal ? "right" : "bottom");
 	const mask = $derived(
 		fade
-			? `linear-gradient(to ${horizontal ? "right" : "bottom"}, transparent, #000 ${before}px, #000 calc(100% - ${after}px), transparent)`
+			? `linear-gradient(to ${edge}, transparent, #000 ${before}px, #000 calc(100% - ${after}px), transparent)`
 			: undefined
 	);
 </script>
-
-<svelte:window onpointermove={dragMove} onpointerup={dragEnd} onpointercancel={dragEnd} />
 
 <ScrollAreaPrimitive.Root
 	bind:ref
@@ -144,7 +142,7 @@
 			drag && "cursor-grab",
 			grab?.moved && "cursor-grabbing select-none",
 		])}
-		style={mask ? `mask-image: ${mask}` : undefined}
+		style={{ maskImage: mask }}
 		onscroll={fade ? measure : undefined}
 		onpointerdown={dragStart}
 		onwheel={() => cancelAnimationFrame(glide)}

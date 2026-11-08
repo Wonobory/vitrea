@@ -1,8 +1,9 @@
 <script lang="ts">
+	import { trackDrag } from "$lib/utils";
 	import { onMount, untrack, type Snippet } from "svelte";
 	import { Spring } from "svelte/motion";
 	import { reducedMotion as reduced } from "$lib/transitions";
-	import { GLASS, stretchSpring } from "$lib/glass";
+	import { LENS_ROUND, stretchSpring } from "$lib/glass";
 	import Lens from "$lib/components/vitrea/Lens.svelte";
 
 	let {
@@ -12,7 +13,7 @@
 		h = 210,
 		small = 130,
 		magnify = 1.18,
-		background = "var(--background)",
+		background,
 		class: className,
 	}: {
 		/** The front layer (text, buttons). */
@@ -41,10 +42,12 @@
 
 	let grab = $state<{ dx: number; dy: number } | null>(null);
 	let releasedAt = 0;
+	let stopDrag = () => {};
 	const down = (e: PointerEvent) => {
 		if (e.button !== 0) return;
 		const r = host.getBoundingClientRect();
 		grab = { dx: e.clientX - r.left - big.current.x, dy: e.clientY - r.top - big.current.y };
+		stopDrag = trackDrag(move, up);
 		e.preventDefault();
 	};
 	const move = (e: PointerEvent) => {
@@ -58,10 +61,16 @@
 		releasedAt = performance.now();
 	};
 
-	onMount(() => {
-		mounted = true;
+	let seeded = false;
+	$effect(() => {
+		if (seeded || !width) return;
+		seeded = true;
 		big.set({ x: width * 0.66, y: height * 0.4 }, { instant: true });
 		little.set({ x: width * 0.3, y: height * 0.55 }, { instant: true });
+	});
+
+	onMount(() => {
+		mounted = true;
 		let raf = 0;
 		const io = new IntersectionObserver(([e]) => {
 			if (e?.isIntersecting) raf ||= requestAnimationFrame(drift);
@@ -92,7 +101,7 @@
 			const d = little.target;
 			little.target = { x: d.x + (q.x - d.x) * 0.02, y: d.y + (q.y - d.y) * 0.02 };
 		};
-		return () => (cancelAnimationFrame(raf), io.disconnect(), wx.stop(), wy.stop());
+		return () => (cancelAnimationFrame(raf), io.disconnect(), wx.stop(), wy.stop(), stopDrag());
 	});
 
 	let sx = $state(0);
@@ -114,8 +123,6 @@
 	const lw = $derived(w * (1 + sx - 0.5 * sy));
 	const lh = $derived(h * (1 + sy - 0.5 * sx));
 </script>
-
-<svelte:window onpointermove={move} onpointerup={up} onpointercancel={up} />
 
 {#snippet copy(layers: "back" | "all", scale: number, at: { x: number; y: number })}
 	<div
@@ -144,11 +151,9 @@
 			h={small}
 			radius={small / 2}
 			shape={{ w: small, h: small, radius: small / 2 }}
-			glass={GLASS}
+			{...LENS_ROUND}
 			dx={0.3 * small}
 			dy={0.3 * small}
-			chroma={0.65}
-			specular={1.5}
 			{background}
 			{width}
 			{height}
@@ -175,11 +180,9 @@
 			h={lh}
 			radius={Math.min(lw, lh) / 2}
 			shape={{ w, h, radius: h / 2 }}
-			glass={GLASS}
+			{...LENS_ROUND}
 			dx={0.32 * h}
 			dy={0.32 * h}
-			chroma={0.65}
-			specular={1.5}
 			{background}
 			{width}
 			{height}

@@ -3,7 +3,7 @@
 	import { Tween } from "svelte/motion";
 	import { reducedMotion as reduced } from "$lib/transitions";
 	import { springSmall } from "$lib/springs";
-	import { stretchSpring, GLASS_SELECTOR } from "$lib/glass";
+	import { stretchSpring, LENS_SELECTOR, selectorShift } from "$lib/glass";
 	import Lens from "$lib/components/vitrea/Lens.svelte";
 
 	let {
@@ -72,11 +72,6 @@
 
 	const PADDING = 4;
 	const RADIUS = 6;
-	const STRENGTH_X = 0.13;
-	const MAX_DX = 6;
-	const STRENGTH_Y = 0.06;
-	const CHROMA = 0.1;
-	const SPECULAR = 1;
 
 	let width = $state(0);
 	let height = $state(0);
@@ -175,11 +170,8 @@
 			h={lh}
 			radius={RADIUS}
 			shape={{ w: itemW, h: itemH, radius: RADIUS }}
-			glass={GLASS_SELECTOR}
-			dx={Math.min(STRENGTH_X * lw, MAX_DX)}
-			dy={STRENGTH_Y * lh}
-			chroma={CHROMA}
-			specular={SPECULAR}
+			{...LENS_SELECTOR}
+			{...selectorShift(lw, lh)}
 			{background}
 			{width}
 			{height}
