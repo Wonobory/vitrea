@@ -10,7 +10,7 @@
 	const resources = [
 		{ title: "Guide", text: "How a judicial auction works." },
 		{ title: "Blog", text: "What we learn from the data." },
-		{ title: "Glossary", text: "Cargas, tasación, depósito…" },
+		{ title: "Glossary", text: "Encumbrances, valuation, deposit…" },
 	];
 </script>
 

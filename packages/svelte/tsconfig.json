@@ -12,11 +12,8 @@
 		"strict": true,
 		"moduleResolution": "bundler"
 	},
-	// Los tests corren con `bun test`, que ya trae sus propios tipos. Se
-	// excluyen del chequeo del navegador a propósito: añadir `@types/bun` al
-	// frontend redefine los globales del DOM (`setTimeout` pasa a devolver
-	// `Timeout` en vez de `number`) y rompe código de componente perfectamente
-	// correcto.
+	// Tests run with `bun test`. `@types/bun` here would redefine DOM globals
+	// (`setTimeout` returning `Timeout`) and break component code.
 	"exclude": ["src/**/*.test.ts"]
 	// Path aliases are handled by https://svelte.dev/docs/kit/configuration#alias
 	// except $lib which is handled by https://svelte.dev/docs/kit/configuration#files

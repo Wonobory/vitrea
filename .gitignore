@@ -8,3 +8,4 @@ dist
 !.env.example
 .vercel
 vite.config.*.timestamp-*
+CLAUDE.md
