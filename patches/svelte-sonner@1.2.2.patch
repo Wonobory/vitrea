@@ -1,0 +1,16 @@
+diff --git a/dist/Toast.svelte b/dist/Toast.svelte
+index 43abbe7a0127722945cb1d2eda7b9901292fa8ea..86296f2cc47ca1acb8856e2c5886822aa492dc2c 100644
+--- a/dist/Toast.svelte
++++ b/dist/Toast.svelte
+@@ -425,8 +425,9 @@
+ 		const yDelta = event.clientY - pointerStart.y;
+ 		const xDelta = event.clientX - pointerStart.x;
+ 
+-		// Determine swipe direction if not already locked
+-		if (!swipeDirection && (Math.abs(xDelta) > 1 || Math.abs(yDelta) > 1)) {
++		// Determine swipe direction if not already locked. Not on the first pixel: a hand's first
++		// pixels wobble sideways, and a drag down locked to x was then ignored (vitrea patch).
++		if (!swipeDirection && (Math.abs(xDelta) > 8 || Math.abs(yDelta) > 8)) {
+ 			swipeDirection = Math.abs(xDelta) > Math.abs(yDelta) ? 'x' : 'y';
+ 		}
+ 
