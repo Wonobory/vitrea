@@ -1,6 +1,9 @@
 packages:
   - packages/*
 
+allowBuilds:
+  esbuild: true
+
 # Docs site only: a published package doesn't carry its dependencies' patches.
 patchedDependencies:
   svelte-sonner@1.2.2: patches/svelte-sonner@1.2.2.patch
