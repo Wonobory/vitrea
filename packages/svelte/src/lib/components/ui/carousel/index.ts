@@ -19,3 +19,5 @@ export {
 	Next as CarouselNext,
 	Dots as CarouselDots,
 };
+
+export type { CarouselAPI } from "./context.js";

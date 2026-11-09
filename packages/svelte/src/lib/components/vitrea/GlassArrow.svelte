@@ -1,8 +1,12 @@
 <script lang="ts">
-	import { Tooltip } from "bits-ui";
+	import { Popover, Tooltip } from "bits-ui";
+
+	/** The glass arrow of a tooltip; pass `Popover.Arrow` (bits-ui) to point a popover the same way. */
+	let { arrow: Arrow = Tooltip.Arrow }: { arrow?: typeof Tooltip.Arrow | typeof Popover.Arrow } =
+		$props();
 </script>
 
-<Tooltip.Arrow>
+<Arrow>
 	{#snippet child({ props })}
 		<span
 			{...props}
@@ -12,7 +16,7 @@
 			<span class="tip"></span>
 		</span>
 	{/snippet}
-</Tooltip.Arrow>
+</Arrow>
 
 <style>
 	.tip {

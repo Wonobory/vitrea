@@ -12,6 +12,7 @@
 </script>
 
 <button
+	type="button"
 	use:press
 	{onclick}
 	aria-pressed={on}
@@ -20,7 +21,7 @@
 >
 	<span class="check" aria-hidden="true"><CheckIcon class="size-2.5" strokeWidth={3.5} /></span>
 	<span class="truncate">{label}</span>
-	{#if n != null}<span class="n">{n.toLocaleString("en-GB")}</span>{/if}
+	{#if n != null}<span class="n">{n.toLocaleString()}</span>{/if}
 </button>
 
 <style>
