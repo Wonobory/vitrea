@@ -93,7 +93,7 @@
 	<span class="inline-flex" aria-hidden="true">
 		{#each slots as slot (slot.key)}
 			<span
-				class="inline-grid h-1lh justify-items-center overflow-clip"
+				class="inline-grid h-lh justify-items-center overflow-clip"
 				in:digitSlot={{ going: false, dir }}
 				out:digitSlot={{ going: true, dir }}
 			>
