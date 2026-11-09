@@ -1,5 +1,5 @@
 <script lang="ts" module>
-	import { getContext, setContext } from "svelte";
+	import { createContext } from "svelte";
 	import type { VariantProps } from "tailwind-variants";
 	import { toggleVariants } from "$lib/components/ui/toggle/index.js";
 	import { TINT } from "$lib/components/ui/button/button.svelte";
@@ -12,13 +12,8 @@
 		orientation?: "horizontal" | "vertical";
 	}
 
-	export const setToggleGroupCtx = (props: ToggleGroupContext) => {
-		setContext("toggleGroup", props);
-	};
-
-	export const getToggleGroupCtx = () => {
-		return getContext<Required<ToggleGroupContext>>("toggleGroup");
-	};
+	export const [getToggleGroupCtx, setToggleGroupCtx] =
+		createContext<Required<ToggleGroupContext>>();
 </script>
 
 <script lang="ts">

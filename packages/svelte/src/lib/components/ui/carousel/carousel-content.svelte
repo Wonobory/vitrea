@@ -11,7 +11,7 @@
 		...restProps
 	}: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
 
-	const emblaCtx = getEmblaContext("<Carousel.Content/>");
+	const emblaCtx = getEmblaContext();
 
 	type Config = NonNullable<Parameters<typeof emblaCarouselSvelte>[1]>;
 	const emblaWhenVisible = (

@@ -1,10 +1,11 @@
 <script lang="ts" module>
-	export const TAP = Symbol("tooltip-tap");
+	import { createContext } from "svelte";
+
+	export const [getTap, setTap] = createContext<() => void>();
 </script>
 
 <script lang="ts" generics="T = never">
 	import { Tooltip as TooltipPrimitive } from "bits-ui";
-	import { setContext } from "svelte";
 
 	let {
 		open = $bindable(false),
@@ -15,7 +16,7 @@
 		openOnTap?: boolean;
 	} = $props();
 
-	setContext(TAP, () => {
+	setTap(() => {
 		if (!openOnTap) return;
 		const was = open;
 		setTimeout(() => (open = !was));

@@ -1,7 +1,6 @@
 <script lang="ts" generics="T = never">
 	import { Tooltip as TooltipPrimitive } from "bits-ui";
-	import { getContext } from "svelte";
-	import { TAP } from "./tooltip.svelte";
+	import { getTap } from "./tooltip.svelte";
 
 	let {
 		ref = $bindable(null),
@@ -10,7 +9,7 @@
 		...restProps
 	}: TooltipPrimitive.TriggerProps<T> = $props();
 
-	const tap = getContext<(() => void) | undefined>(TAP);
+	const tap = getTap();
 	let touch = false;
 </script>
 
@@ -23,7 +22,7 @@
 	}}
 	onclick={(e) => {
 		onclick?.(e);
-		if (touch) tap?.();
+		if (touch) tap();
 	}}
 	{...restProps}
 />

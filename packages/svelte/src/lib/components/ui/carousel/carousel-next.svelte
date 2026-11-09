@@ -13,7 +13,7 @@
 		...restProps
 	}: WithoutChildren<Props> = $props();
 
-	const emblaCtx = getEmblaContext("<Carousel.Next/>");
+	const emblaCtx = getEmblaContext();
 </script>
 
 <Button
