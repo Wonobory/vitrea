@@ -2,6 +2,7 @@
 	"name": "vitreakit",
 	"private": true,
 	"type": "module",
+	"packageManager": "pnpm@12.6.0",
 	"scripts": {
 		"dev": "pnpm --filter @vitreakit/svelte dev",
 		"build": "pnpm --filter @vitreakit/svelte build",
