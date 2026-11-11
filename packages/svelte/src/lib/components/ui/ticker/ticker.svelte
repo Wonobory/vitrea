@@ -3,6 +3,7 @@
 	import { springXSmall } from "$lib/springs";
 	import { cn } from "$lib/utils.js";
 	import { digitSlot, reducedMotion as reduced } from "$lib/transitions";
+	import { slotsOf } from "./slots.js";
 
 	type Props = {
 		value: number;
@@ -23,9 +24,7 @@
 	});
 
 	const text = $derived(format(value));
-	const slots = $derived(
-		[...text].map((ch, i, all) => ({ ch, key: all.length - 1 - i, digit: /\d/.test(ch) }))
-	);
+	const slots = $derived(slotsOf(text));
 
 	const ROWS = 21;
 	const MID = 10;
